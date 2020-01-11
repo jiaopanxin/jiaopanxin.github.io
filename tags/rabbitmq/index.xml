@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>rabbitmq on Joken Blog</title>
+    <link>https://jiaopanxin.github.io/tags/rabbitmq/</link>
+    <description>Recent content in rabbitmq on Joken Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Thu, 26 Dec 2019 11:38:00 +0800</lastBuildDate>
+    
+	<atom:link href="https://jiaopanxin.github.io/tags/rabbitmq/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Rabbitmq_2_集群文档</title>
+      <link>https://jiaopanxin.github.io/post/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/rabbitmq_2_%E9%9B%86%E7%BE%A4%E6%96%87%E6%A1%A3/</link>
+      <pubDate>Thu, 26 Dec 2019 11:38:00 +0800</pubDate>
+      
+      <guid>https://jiaopanxin.github.io/post/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/rabbitmq_2_%E9%9B%86%E7%BE%A4%E6%96%87%E6%A1%A3/</guid>
+      <description>RabbitMQ集群原理与部署 在项目中想要 RabbitMQ 变得更加健壮，就要使得其变成高可用，所以我们要搭建一个 RabbitMQ 集群，这样你可以从任何一台 RabbitMQ 故障中得以幸</description>
+    </item>
+    
+    <item>
+      <title>Rabbitmq_1_基本概念</title>
+      <link>https://jiaopanxin.github.io/post/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/rabbitmq_1_%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/</link>
+      <pubDate>Thu, 26 Dec 2019 10:49:10 +0800</pubDate>
+      
+      <guid>https://jiaopanxin.github.io/post/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/rabbitmq_1_%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/</guid>
+      <description>RabbitMQ的一些基本概念 MQ 全称为 Message Queue，消息队列（MQ）是一种应用程序对应用程序的通信方法，即我们常说的中间件之一，而 RabbitMQ 则是 MQ 的</description>
+    </item>
+    
+  </channel>
+</rss>

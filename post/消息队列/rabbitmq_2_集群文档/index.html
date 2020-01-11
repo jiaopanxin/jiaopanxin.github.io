@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Rabbitmq_2_集群文档 - Joken Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Joken" /><meta name="description" content="RabbitMQ集群原理与部署 在项目中想要 RabbitMQ 变得更加健壮，就要使得其变成高可用，所以我们要搭建一个 RabbitMQ 集群，这样你可以从任何一台 RabbitMQ 故障中得以幸" /><meta name="keywords" content="Hugo, theme, even" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.62.0 with theme even" />
+
+
+<link rel="canonical" href="https://jiaopanxin.github.io/post/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/rabbitmq_2_%E9%9B%86%E7%BE%A4%E6%96%87%E6%A1%A3/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link href="/lib/fancybox/jquery.fancybox-3.1.20.min.css" rel="stylesheet">
+
+
+<meta property="og:title" content="Rabbitmq_2_集群文档" />
+<meta property="og:description" content="RabbitMQ集群原理与部署 在项目中想要 RabbitMQ 变得更加健壮，就要使得其变成高可用，所以我们要搭建一个 RabbitMQ 集群，这样你可以从任何一台 RabbitMQ 故障中得以幸" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://jiaopanxin.github.io/post/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/rabbitmq_2_%E9%9B%86%E7%BE%A4%E6%96%87%E6%A1%A3/" />
+<meta property="article:published_time" content="2019-12-26T11:38:00+08:00" />
+<meta property="article:modified_time" content="2019-12-26T11:38:00+08:00" />
+<meta itemprop="name" content="Rabbitmq_2_集群文档">
+<meta itemprop="description" content="RabbitMQ集群原理与部署 在项目中想要 RabbitMQ 变得更加健壮，就要使得其变成高可用，所以我们要搭建一个 RabbitMQ 集群，这样你可以从任何一台 RabbitMQ 故障中得以幸">
+<meta itemprop="datePublished" content="2019-12-26T11:38:00&#43;08:00" />
+<meta itemprop="dateModified" content="2019-12-26T11:38:00&#43;08:00" />
+<meta itemprop="wordCount" content="3764">
+
+
+
+<meta itemprop="keywords" content="rabbitmq," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Rabbitmq_2_集群文档"/>
+<meta name="twitter:description" content="RabbitMQ集群原理与部署 在项目中想要 RabbitMQ 变得更加健壮，就要使得其变成高可用，所以我们要搭建一个 RabbitMQ 集群，这样你可以从任何一台 RabbitMQ 故障中得以幸"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Joken Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">首页</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">归档</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">分类</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">关于我</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Joken Blog</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">首页</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">归档</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">分类</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">标签</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">关于我</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Rabbitmq_2_集群文档</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-12-26 11:38 </span>
+        <div class="post-category">
+            <a href="/categories/rabbitmq/"> rabbitmq </a>
+            </div>
+          <span class="more-meta"> 约 3764 字 </span>
+          <span class="more-meta"> 预计阅读 8 分钟 </span>
+        <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#heading">集群架构</a>
+      <ul>
+        <li><a href="#heading-1">元数据</a></li>
+        <li><a href="#heading-2">集群中的队列</a></li>
+        <li><a href="#heading-3">分布交换器</a></li>
+        <li><a href="#heading-4">内存节点与磁盘节点</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading-5">集群部署</a>
+      <ul>
+        <li><a href="#rabbitmq-1">安装rabbitmq</a></li>
+        <li><a href="#heading-6">设置主机名</a></li>
+        <li><a href="#-erlang-cookie">复制 Erlang cookie</a></li>
+        <li><a href="#heading-7">组成集群</a></li>
+        <li><a href="#heading-8">设置内存节点</a></li>
+        <li><a href="#heading-9">镜像队列</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading-10">集群的负载均衡</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h1 id="rabbitmq">RabbitMQ集群原理与部署</h1>
+<p>在项目中想要 RabbitMQ 变得更加健壮，就要使得其变成高可用，所以我们要搭建一个 RabbitMQ 集群，这样你可以从任何一台 RabbitMQ 故障中得以幸免，并且应用程序能够持续运行而不会发生阻塞。而 RabbitMQ 本身是基于 Erlang 编写的，Erlang 天生支持分布式（通过同步 Erlang 集群各节点的 cookie 来实现），因此不需要像 ActiveMQ、Kafka 那样通过 ZooKeeper 分别来实现 HA 方案和保存集群的元数据。</p>
+<h2 id="heading">集群架构</h2>
+<h3 id="heading-1">元数据</h3>
+<p>RabbitMQ 内部有各种基础构件，包括队列、交换器、绑定、虚拟主机等，他们组成了 AMQP 协议消息通信的基础，而这些构件以元数据的形式存在，它始终记录在 RabbitMQ 内部，它们分别是：</p>
+<ul>
+<li>队列元数据：队列名称和它们的属性</li>
+<li>交换器元数据：交换器名称、类型和属性</li>
+<li>绑定元数据：一张简单的表格展示了如何将消息路由到队列</li>
+<li>vhost元数据：为 vhost 内的队列、交换器和绑定提供命名空间和安全属性</li>
+</ul>
+<p>在单一节点上，RabbitMQ 会将上述元数据存储到内存上，如果是磁盘节点（下面会讲），还会存储到磁盘上。</p>
+<h3 id="heading-2">集群中的队列</h3>
+<p>这里有个问题需要思考，RabbitMQ 默认会将消息冗余到所有节点上吗？这样听起来正符合高可用的特性，只要集群上还有一个节点存活，那么就可以继续进行消息通信，但这也随之为 RabbitMQ 带来了致命的缺点：</p>
+<ol>
+<li>每次发布消息，都要把它扩散到所有节点上，而且对于磁盘节点来说，每一条消息都会触发磁盘活动，这会导致整个集群内性能负载急剧拉升。</li>
+<li>如果每个节点都有所有队列的完整内容，那么添加节点不会给你带来额外的存储空间，也会带来木桶效应，举个例子，如果集群内有个节点存储了 3G 队列内容，那么在另外一个只有 1G 存储空间的节点上，就会造成内存空间不足的情况，也就是无法通过集群节点的扩容提高消息积压能力。</li>
+</ol>
+<p>解决这个问题就是通过集群中唯一节点来负责任何特定队列，只有该节点才会受队列大小的影响，其它节点如果接收到该队列消息，那么就要根据元数据信息，传递给队列所有者节点（也就是说其它节点上只存储了特定队列所有者节点的指针）。这样一来，就可以通过在集群内增加节点，存储更多的队列数据。</p>
+<h3 id="heading-3">分布交换器</h3>
+<p>交换器其实是我们想象出来的，它本质是一张查询表，里面包括了交换器名称和一个队列的绑定列表，当你将消息发布到交换器中，实际上是你所在的信道将消息上的路由键与交换器的绑定列表进行匹配，然后将消息路由出去。有了这个机制，那么在所有节点上传递交换器消息将简单很多，而 RabbitMQ 所做的事情就是把交换器拷贝到所有节点上，因此每个节点上的每条信道都可以访问完整的交换器了。</p>
+<p><img src="/images/rabbitmq/8.jpg" alt=""></p>
+<h3 id="heading-4">内存节点与磁盘节点</h3>
+<p>关于上面队列所说的问题与解决办法，又有了一个伴随而来的问题出现：如果特定队列的所有者节点发生了故障，那么该节点上的队列和关联的绑定都会消失吗？</p>
+<ol>
+<li>如果是内存节点，那么附加在该节点上的队列和其关联的绑定都会丢失，并且消费者可以重新连接集群并重新创建队列；</li>
+<li>如果是磁盘节点，重新恢复故障后，该队列又可以进行传输数据了，并且在恢复故障磁盘节点之前，不能在其它节点上让消费者重新连到集群并重新创建队列，如果消费者继续在其它节点上声明该队列，会得到一个 404 NOT_FOUND 错误，这样确保了当故障节点恢复后加入集群，该节点上的队列消息不回丢失，也避免了队列会在一个节点以上出现冗余的问题。</li>
+</ol>
+<p>接下来说说内存节点与磁盘节点在集群中的作用，在集群中的每个节点，要么是内存节点，要么是磁盘节点，如果是内存节点，会将所有的元数据信息仅存储到内存中，而磁盘节点则不仅会将所有元数据存储到内存上， 还会将其持久化到磁盘。</p>
+<p>在单节点 RabbitMQ 上，仅允许该节点是磁盘节点，这样确保了节点发生故障或重启节点之后，所有关于系统的配置与元数据信息都会重磁盘上恢复；而在 RabbitMQ 集群上，允许节点上至少有一个磁盘节点，在内存节点上，意味着队列和交换器声明之类的操作会更加快速。原因是这些操作会将其元数据同步到所有节点上，对于内存节点，将需要同步的元数据写进内存就行了，但对于磁盘节点，意味着还需要及其消耗性能的磁盘写入操作。</p>
+<p>RabbitMQ 集群只要求至少有一个磁盘节点，这是有道理的，当其它内存节点发生故障或离开集群，只需要通知至少一个磁盘节点进行元数据的更新，如果是碰巧唯一的磁盘节点也发生故障了，集群可以继续路由消息，但是不可以做以下操作了：</p>
+<ul>
+<li>创建队列</li>
+<li>创建交换器</li>
+<li>创建绑定</li>
+<li>添加用户</li>
+<li>更改权限</li>
+<li>添加或删除集群节点</li>
+</ul>
+<p>这是因为上述操作都需要持久化到磁盘节点上，以便内存节点恢复故障可以从磁盘节点上恢复元数据，解决办法是在集群添加 2 台以上的磁盘节点，这样其中一台发生故障了，集群仍然可以保持运行，且能够在任何时候保存元数据变更。</p>
+<h2 id="heading-5">集群部署</h2>
+<h3 id="rabbitmq-1">安装rabbitmq</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback"># 更新 yum源
+yum install epel-release
+yum install -y rabbitmq-server
+
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="heading-6">设置主机名</h3>
+<p>由于 RabbitMQ 集群连接是通过主机名来连接服务的，必须保证各个主机名之间可以 ping 通，所以需要做以下操作：</p>
+<p>修改hostname：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">$ hostname node1 # 修改节点1的主机名
+$ hostname node2 # 修改节点2的主机名
+
+</code></pre></td></tr></table>
+</div>
+</div><p>编辑<code>/etc/hosts</code>文件，添加到在三台机器的<code>/etc/hosts</code>中以下内容：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">$ sudo vim /etc/hosts
+
+172.16.249.121 node1
+172.16.249.122 node2
+
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="-erlang-cookie">复制 Erlang cookie</h3>
+<p>这里将 node1 的该文件复制到 node2，由于这个文件权限是 400 为方便传输，先修改权限，非必须操作，所以需要先修改 node2 中的该文件权限为 777</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">## 先启动后，以便获取 erlang.cookie
+service rabbitmq-server start 
+cat /var/lib/rabbitmq/.erlang.cookie
+
+</code></pre></td></tr></table>
+</div>
+</div><p>用 scp 拷贝到节点 2</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">scp /var/lib/rabbitmq/.erlang.cookie node2:/var/lib/rabbitmq/
+
+</code></pre></td></tr></table>
+</div>
+</div><p>更改节点2 用户组和权限</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">chmod 400 /var/lib/rabbitmq/.erlang.cookie
+chown rabbitmq:rabbitmq /var/lib/rabbitmq/.erlang.cookie
+service rabbitmq-server start
+
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="heading-7">组成集群</h3>
+<p>在节点 2 执行如下命令：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">$ rabbitmqctl stop_app # 停止rabbitmq服务
+$ rabbitmqctl reset # 清空节点状态
+$ rabbitmqctl join_cluster rabbit@node1 # node2和node1构成集群,node2必须能通过node1的主机名ping通
+
+$ rabbitmqctl start_app  # 开启rabbitmq服务
+
+</code></pre></td></tr></table>
+</div>
+</div><p>在任意一台机上面查看集群状态：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">$ rabbitmqctl cluster_status
+Cluster status of node rabbit@node1 ...
+[{nodes,[{disc,[rabbit@node1,rabbit@node2]}]},
+ {running_nodes,[rabbit@node2,rabbit@node1]},
+ {cluster_name,&lt;&lt;&#34;rabbit@node1&#34;&gt;&gt;},
+ {partitions,[]}]
+...done.
+
+</code></pre></td></tr></table>
+</div>
+</div><p>启动web段使用</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">$ rabbitmq-plugins enable rabbitmq_management
+
+</code></pre></td></tr></table>
+</div>
+</div><p>第一行是集群中的节点成员，disc 表示这些都是磁盘节点，第二行是正在运行的节点成员。</p>
+<p>登陆管理后台查看节点状态：</p>
+<p>http://IP:15672 默认用户和密码均是:guest</p>
+<p><img src="/images/rabbitmq/9.png" alt="">
+cluster 搭建起来后若在 web 管理工具中 rabbitmq_management 的 Overview 的 Nodes 部分看到 “Node statistics not available” 的信息，说明在该节点上 web 管理插件还未启用。 执行如下命令：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">$ rabbitmq-plugins enable rabbitmq_management
+
+</code></pre></td></tr></table>
+</div>
+</div><p>重启 RabbitMQ：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">$ rabbitmqctl stop
+$ rabbitmq-server -detached
+
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="heading-8">设置内存节点</h3>
+<p>如果节点需要设置成内存节点，则加入集群的命令如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">$ rabbitmqctl join_cluster --ram rabbit@node1
+
+</code></pre></td></tr></table>
+</div>
+</div><p>其中<code>–ram</code>指的是作为内存节点，如果不加，那就默认为内存节点。</p>
+<p>如果节点在集群中已经是磁盘节点了，通过以下命令可以将节点改成内存节点：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">$ rabbitmqctl stop_app  # 停止rabbitmq服务
+$ rabbitmqctl change_cluster_node_type ram # 更改节点为内存节点
+$ rabbitmqctl start_app # 开启rabbitmq服务
+
+</code></pre></td></tr></table>
+</div>
+</div><p>现在再查看集群状态：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">$ rabbitmqctl cluster_status
+
+Cluster status of node rabbit@node1 ...
+[{nodes,[{disc,[rabbit@node1]},{ram,[rabbit@node2]}]},
+ {running_nodes,[rabbit@node2,rabbit@node1]},
+ {cluster_name,&lt;&lt;&#34;rabbit@node1&#34;&gt;&gt;},
+ {partitions,[]}]
+...done.
+
+</code></pre></td></tr></table>
+</div>
+</div><p>可以看到，节点 2 已经成为内存节点了。</p>
+<h3 id="heading-9">镜像队列</h3>
+<p>当节点发生故障时，尽管所有元数据信息都可以从磁盘节点上将元数据拷贝到本节点上，但是队列的消息内容就不行了，这样就会导致消息的丢失，那是因为在默认情况下，队列只会保存在其中一个节点上，我们在将集群队列时也说过。</p>
+<p>聪明的 RabbitMQ 早就意识到这个问题了，在 2.6以后的版本中增加了，队列冗余选项：镜像队列。镜像队列的主队列（master）依然是仅存在于一个节点上，其余从主队列拷贝的队列叫从队列（slave）。如果主队列没有发生故障，那么其工作流程依然跟普通队列一样，生产者和消费者不会感知其变化，当发布消息时，依然是路由到主队列中，而主队列通过类似广播的机制，将消息扩散同步至其余从队列中，这就有点像 fanout 交换器一样。而消费者依然是从主队列中读取消息。</p>
+<p>一旦主队列发生故障，集群就会从最老的一个从队列选举为新的主队列，这也就实现了队列的高可用了，但我们切记不要滥用这个机制，在上面也说了，队列的冗余操作会导致不能通过扩展节点增加存储空间，而且会造成性能瓶颈。</p>
+<p>命令格式如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">$ rabbitmqctl set_policy [-p Vhost] Name Pattern Definition [Priority]
+
+-p Vhost: 可选参数，针对指定vhost下的queue进行设置
+Name: policy的名称
+Pattern: queue的匹配模式(正则表达式)
+Definition: 镜像定义，包括三个部分ha-mode, ha-params, ha-sync-mode
+    ha-mode: 指明镜像队列的模式，有效值为 all/exactly/nodes
+        all: 表示在集群中所有的节点上进行镜像
+        exactly: 表示在指定个数的节点上进行镜像，节点的个数由ha-params指定
+        nodes: 表示在指定的节点上进行镜像，节点名称通过ha-params指定
+    ha-params: ha-mode模式需要用到的参数
+    ha-sync-mode: 进行队列中消息的同步方式，有效值为automatic和manual
+priority: 可选参数，policy的优先级
+
+</code></pre></td></tr></table>
+</div>
+</div><p>举几个例子：</p>
+<ul>
+<li>以下示例声明名为ha-all的策略，它与名称以”ha”开头的队列相匹配，并将镜像配置到集群中的所有节点：</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">$ rabbitmqctl set_policy ha-all &#34;^&#34; &#39;{&#34;ha-mode&#34;:&#34;all&#34;}&#39;
+
+</code></pre></td></tr></table>
+</div>
+</div><p>上述命令会将所有的队列冗余到所有节点上，一般可以拿来测试。</p>
+<ul>
+<li>策略的名称以”two”开始的队列镜像到群集中的任意两个节点，并进行自动同步：</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">$ rabbitmqctl set_policy ha-two &#34;^two.&#34; &#39;{&#34;ha-mode&#34;:&#34;exactly&#34;,&#34;ha-params&#34;:2,&#34;ha-sync-mode&#34;:&#34;automatic&#34;}&#39;
+
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>以”node”开头的队列镜像到集群中的特定节点的策略：</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">$ rabbitmqctl set_policy ha-nodes &#34;^nodes.&#34; &#39;{&#34;ha-mode&#34;:&#34;nodes&#34;,&#34;ha-params&#34;:[&#34;rabbit@nodeA&#34;, &#34;rabbit@nodeB&#34;]}&#39;
+
+</code></pre></td></tr></table>
+</div>
+</div><p><img src="/images/rabbitmq/10.jpg" alt=""></p>
+<h2 id="heading-10">集群的负载均衡</h2>
+<p>HAProxy 提供高可用性、负载均衡以及基于 TCP 和 HTTP 应用的代理，支持虚拟主机，它是免费、快速并且可靠的一种解决方案。</p>
+<p>集群负载均和架构图：</p>
+<p><img src="/images/rabbitmq/11.jpg" alt="">
+安装 HAProxy：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">$ yum install haproxy
+
+</code></pre></td></tr></table>
+</div>
+</div><p>编辑 HAProxy 配置文件：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">$ vim /etc/haproxy/haproxy.cfg
+
+</code></pre></td></tr></table>
+</div>
+</div><p>加入以下内容：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">#绑定配置
+listen rabbitmq_cluster 0.0.0.0:5670
+    #配置TCP模式
+    mode tcp
+    #加权轮询
+    balance roundrobin
+    #RabbitMQ集群节点配置
+    server node1 172.16.249.121:5672 check inter 2000 rise 2 fall 3
+    server node2 172.16.249.122:5672 check inter 2000 rise 2 fall 3
+
+#haproxy监控页面地址
+listen monitor 0.0.0.0:8100
+    mode http
+    option httplog
+    stats enable
+    stats uri /stats
+    stats refresh 5s
+
+</code></pre></td></tr></table>
+</div>
+</div><p>启动 HAProxy：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">$ /usr/sbin/haproxy -f /etc/haproxy/haproxy.cfg
+
+</code></pre></td></tr></table>
+</div>
+</div><p>后台管理：</p>
+<p>http://172.16.249.121:8100/stats</p>
+<p><img src="/images/rabbitmq/12.png" alt=""></p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Joken</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-12-26 11:38
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/rabbitmq/">rabbitmq</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/elkb/elkb_1_%E9%9B%86%E4%B8%AD%E5%BC%8F%E6%97%A5%E5%BF%97%E7%AE%A1%E7%90%86/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">ELKB_1_集中式日志管理</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/rabbitmq_1_%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/">
+            <span class="next-text nav-default">Rabbitmq_1_基本概念</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:your@email.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://localhost:1313" class="iconfont icon-google" title="google"></a>
+      <a href="https://github.com/jiaopanxin/jiaopanxin.github.io" class="iconfont icon-github" title="github"></a>
+      <a href="http://localhost:1313" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="http://localhost:1313" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="http://localhost:1313" class="iconfont icon-douban" title="douban"></a>
+      <a href="http://localhost:1313" class="iconfont icon-pocket" title="pocket"></a>
+      <a href="http://localhost:1313" class="iconfont icon-tumblr" title="tumblr"></a>
+      <a href="http://localhost:1313" class="iconfont icon-instagram" title="instagram"></a>
+      <a href="http://localhost:1313" class="iconfont icon-gitlab" title="gitlab"></a>
+      <a href="http://localhost:1313" class="iconfont icon-bilibili" title="bilibili"></a>
+  <a href="https://jiaopanxin.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  <div class="busuanzi-footer">
+    <span id="busuanzi_container_site_pv"> 本站总访问量 <span id="busuanzi_value_site_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次 </span>
+      <span class="division">|</span>
+    <span id="busuanzi_container_site_uv"> 本站总访客数 <span id="busuanzi_value_site_uv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 人 </span>
+  </div>
+
+  <span class="copyright-year">
+    &copy; 
+    2019 - 
+    2020
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Joken</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  <script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  <script type="text/javascript" src="/lib/fancybox/jquery.fancybox-3.1.20.min.js"></script>
+    <script type="text/javascript" src="/lib/timeago/timeago-3.0.2.min.js"></script>
+    <script type="text/javascript" src="/lib/timeago/timeago.locales-3.0.2.min.js"></script>
+  <script><!-- NOTE: timeago.js uses the language code format like "zh_CN" (underscore and case sensitive) -->
+    var languageCode = "zh-CN".replace(/-/g, '_').replace(/_(.*)/, function ($0, $1) {return $0.replace($1, $1.toUpperCase());});
+    timeago().render(document.querySelectorAll('.timeago'), languageCode);
+    timeago.cancel();  
+  </script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

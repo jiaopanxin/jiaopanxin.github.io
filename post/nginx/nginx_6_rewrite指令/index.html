@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Nginx_6_rewrite指令 - Joken Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Joken" /><meta name="description" content="第六章 Nginx rewrite指令集详解 1 2 3 Rewrite 是Nginx提供的一个重要基本功能，其在Web服务器产品中几乎是必备的功能，用于实现URL的重写。 U" /><meta name="keywords" content="Hugo, theme, even" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.62.0 with theme even" />
+
+
+<link rel="canonical" href="https://jiaopanxin.github.io/post/nginx/nginx_6_rewrite%E6%8C%87%E4%BB%A4/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link href="/lib/fancybox/jquery.fancybox-3.1.20.min.css" rel="stylesheet">
+
+
+<meta property="og:title" content="Nginx_6_rewrite指令" />
+<meta property="og:description" content="第六章 Nginx rewrite指令集详解 1 2 3 Rewrite 是Nginx提供的一个重要基本功能，其在Web服务器产品中几乎是必备的功能，用于实现URL的重写。 U" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://jiaopanxin.github.io/post/nginx/nginx_6_rewrite%E6%8C%87%E4%BB%A4/" />
+<meta property="article:published_time" content="2019-12-26T16:23:04+08:00" />
+<meta property="article:modified_time" content="2019-12-26T16:23:04+08:00" />
+<meta itemprop="name" content="Nginx_6_rewrite指令">
+<meta itemprop="description" content="第六章 Nginx rewrite指令集详解 1 2 3 Rewrite 是Nginx提供的一个重要基本功能，其在Web服务器产品中几乎是必备的功能，用于实现URL的重写。 U">
+<meta itemprop="datePublished" content="2019-12-26T16:23:04&#43;08:00" />
+<meta itemprop="dateModified" content="2019-12-26T16:23:04&#43;08:00" />
+<meta itemprop="wordCount" content="4030">
+
+
+
+<meta itemprop="keywords" content="nginx," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Nginx_6_rewrite指令"/>
+<meta name="twitter:description" content="第六章 Nginx rewrite指令集详解 1 2 3 Rewrite 是Nginx提供的一个重要基本功能，其在Web服务器产品中几乎是必备的功能，用于实现URL的重写。 U"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Joken Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">首页</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">归档</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">分类</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">关于我</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Joken Blog</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">首页</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">归档</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">分类</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">标签</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">关于我</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Nginx_6_rewrite指令</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-12-26 16:23 </span>
+        <div class="post-category">
+            <a href="/categories/nginx/"> nginx </a>
+            </div>
+          <span class="more-meta"> 约 4030 字 </span>
+          <span class="more-meta"> 预计阅读 9 分钟 </span>
+        <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h4 id="-nginx-rewrite">第六章 Nginx rewrite指令集详解</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">Rewrite 是Nginx提供的一个重要基本功能，其在Web服务器产品中几乎是必备的功能，用于实现URL的重写。
+URL的重写是非常有用的功能，比如它可以让我们在改变网站结构后，无需要求客户端用户修改原有的浏览器书签。也无需其他网站修改对我们网站的友情链接。Nginx的Rewrite 功能的实现依赖于PCRE的支持，因此在安装编译Nginx 前，需要安装PCRE库。下面我们将针对rewrite 指令集做一下详细的阐述。
+
+</code></pre></td></tr></table>
+</div>
+</div><h5 id="rewrite-">rewrite 指令</h5>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">该指令可以说是rewrite指令集中的核心指令。它通过正则表达式的使用改变URI。可以同时存在一个或者多个指令，按照顺序依次对URL进行匹配和处理。语法如下:
+rewrite regex replaement [flag];
+regex, 用于匹配URI的正则表达式。使用&#34;()&#34;标记要截取的内容。
+注意:
+1）rewrite 接受到的URL不包含HOST地址，因此regex不可能匹配到URI的HOST地址。若请求的的URL为
+   http://myweb.com/source ，此时rewrite指令接受到的URI 是 &#34;/source&#34;, 而不包含&#34;myweb.com&#34;。
+2）请求URL中的请求指令参数也是不包含在rewrite指令接收到的URI内容中。 
+   比如: 请求的URL: HTTP://myweb.com/source?arg1=value1&amp;arg2=value2
+   rewrite指令接受到的URI为 &#34;/source&#34; 而不包含 &#34;?arg1=value1&amp;arg2=value2&#34;
+replaement, 匹配成功后用于替换URI 中被截取内容的字符串。默认情况下，如果该字符串是由&#34;http://&#34; 或
+            &#34;https&#34; 开头的， 则不会继续对URI 进行处理，而是直接将重写后的URI返回给客户端。
+
+</code></pre></td></tr></table>
+</div>
+</div><h5 id="breaklastpermanentredirect-">break、last、permanent、redirect 标记</h5>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">这四个falg会根据选择的不同产生不同的效果。这里我们将break 和last 作为一组进行比较；permanent 和 redirect 作为另一组进行比较。
+
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>break vs last</strong></p>
+<p><strong>当 break 和 last 结合 rewrite 指令使用在location 块之外的场景</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback"># 此时break 和  last 这两个falg 的功能是等价的； 可以互换使用。比如:
+#
+#    rewrite /aaa /bbb last;
+#    rewrite /aaa /bbb break;
+#
+# 注:
+# 可以开启error_log 的debug 模式， 方便观察rewrite 规则的变化
+server {
+    listen       80;
+    server_name  www.blog.qfedu.com;
+    root   /data0/www/htdocs/www.blog.qfedu.com;
+    access_log /data0/www/logs/www.blog.qfedu.com-access_log main;
+    error_log  /data0/www/logs/www.blog.qfedu.com-error_log debug;
+
+    rewrite /aaa /bbb last;
+    rewrite /aaa /bbb break;
+    rewrite ^/(.*)$ /index.php/$1 last;
+
+    location ~ /index.php {
+        index  index.html index.htm;
+    }
+
+    location / {
+        index  index.html index.htm;
+    }
+}
+
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>测试</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback"># 我们这里主要去追踪rewrite 的实现，如何去debug rewrite 规则。请无需介意http 的返回状态码。
+# 注释掉 rewrite /aaa /bbb break;
+# curl http://127.0.0.1/aaa -H &#34;HOST: www.blog.qfedu.com&#34;
+# 与此同时 tail www.blog.qfedu.com-error_log , 会发现如下结果:
+
+# 以下日志，我们发现 rewrite /aaa /bbb last; 生效，且跳过了后面的rewrite 比较逻辑
+2018/03/20 23:50:08 [notice] 30097#0: *1 &#34;/aaa&#34; matches &#34;/aaa&#34;, client: 127.0.0.1, server: www.blog.qfedu.com, request: &#34;GET /aaa HTTP/1.1&#34;, host: &#34;www.blog.qfedu.com&#34;
+2018/03/20 23:50:08 [debug] 30097#0: *1 http script copy: &#34;/bbb&#34;
+2018/03/20 23:50:08 [debug] 30097#0: *1 http script regex end
+2018/03/20 23:50:08 [notice] 30097#0: *1 rewritten data: &#34;/bbb&#34;, args: &#34;&#34;, client: 127.0.0.1, server: www.blog.qfedu.com, request: &#34;GET /aaa HTTP/1.1&#34;, host: &#34;www.blog.qfedu.com&#34;
+
+# 通过location 比对，选择了 location: &#34;/&#34; 
+2018/03/20 23:50:08 [debug] 30097#0: *1 test location: &#34;/&#34;
+2018/03/20 23:50:08 [debug] 30097#0: *1 test location: ~ &#34;/index.php&#34;
+2018/03/20 23:50:08 [debug] 30097#0: *1 using configuration &#34;/&#34;
+
+</code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback"># 注释掉 rewrite /aaa /bbb last;
+# curl http://127.0.0.1/aaa -H &#34;HOST: www.blog.qfedu.com&#34;
+# 与此同时 tail www.blog.qfedu.com-error_log , 会发现如下结果:
+
+# 以下日志，我们发现 rewrite /aaa /bbb break; 生效，且跳过了后面的rewrite 比较逻辑。
+2018/03/20 23:57:55 [notice] 30148#0: *3 &#34;/aaa&#34; matches &#34;/aaa&#34;, client: 127.0.0.1, server: www.blog.qfedu.com, request: &#34;GET /aaa HTTP/1.1&#34;, host: &#34;www.blog.qfedu.com&#34;
+2018/03/20 23:57:55 [debug] 30148#0: *3 http script copy: &#34;/bbb&#34;
+2018/03/20 23:57:55 [debug] 30148#0: *3 http script regex end
+2018/03/20 23:57:55 [notice] 30148#0: *3 rewritten data: &#34;/bbb&#34;, args: &#34;&#34;, client: 127.0.0.1, server: www.blog.qfedu.com, request: &#34;GET /aaa HTTP/1.1&#34;, host: &#34;www.blog.qfedu.com&#34;
+
+# 通过location 比对，选择了 location: &#34;/&#34; 
+2018/03/20 23:57:55 [debug] 30148#0: *3 test location: &#34;/&#34;
+2018/03/20 23:57:55 [debug] 30148#0: *3 test location: ~ &#34;/index.php&#34;
+2018/03/20 23:57:55 [debug] 30148#0: *3 using configuration &#34;/&#34;
+
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>当 break 和 last 结合 rewrite 指令使用在location 块之内的场景</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">last 行为: 终止继续在本location块中处理接收到的URI，并将处理后重写的URI作为一个新的URI,在各个location
+块上进行处理。 该标记将重写后的URI重新在server块中执行，为重写后的URI提供转入到其他location块的机会。
+break 行为: 将重写后的URI作为一个新的URI， 继续再本块中继续处理。该标记将重写后的地址在当前的location 块中执行，不会将新的URI转向到其他的location块。
+
+</code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback"># 此时break 和  last 这两个falg 的功能将发生本质上的变化。比如:
+#
+#        rewrite ^/(.*)$ /index.php/$1 last;
+#        rewrite ^/(.*)$ /index.php/$1 break;
+#
+# 注:
+# 可以开启error_log 的debug 模式， 方便观察rewrite 规则的变化
+server {
+    listen       80;
+    server_name  www.blog.qfedu.com;
+    root   /data0/www/htdocs/www.blog.qfedu.com;
+    access_log /data0/www/logs/www.blog.qfedu.com-access_log main;
+    error_log  /data0/www/logs/www.blog.qfedu.com-error_log debug;
+
+    location ~ /index.php {
+        index  index.html index.htm;
+    }
+
+    location / {
+        rewrite ^/(.*)$ /index.php/$1 last;
+        rewrite ^/(.*)$ /index.php/$1 break;
+        index  index.html index.htm;
+    }
+}
+
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>测试</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback"># 我们这里主要去追踪rewrite 的实现，如何去debug rewrite 规则。请无需介意http 的返回状态码。
+# 注释掉 rewrite ^/(.*)$ /index.php/$1 break;
+# curl http://127.0.0.1/aaa -H &#34;HOST: www.blog.qfedu.com&#34;
+# 与此同时 tail www.blog.qfedu.com-error_log , 会发现如下结果:
+
+# 先进行 location 的选择， 最终选择了默认的location &#34;/&#34;
+2018/03/21 00:06:15 [debug] 30262#0: *5 test location: &#34;/&#34;
+2018/03/21 00:06:15 [debug] 30262#0: *5 test location: ~ &#34;/index.php&#34;
+2018/03/21 00:06:15 [debug] 30262#0: *5 using configuration &#34;/&#34;
+
+# 在默认的location 中 命中了rewrite 规则
+2018/03/21 00:06:15 [debug] 30262#0: *5 http script regex: &#34;^/(.*)$&#34;
+2018/03/21 00:06:15 [notice] 30262#0: *5 &#34;^/(.*)$&#34; matches &#34;/aaa&#34;, client: 127.0.0.1, server: www.blog.qfedu.com, request: &#34;GET /aaa HTTP/1.1&#34;, host: &#34;www.blog.qfedu.com&#34;
+2018/03/21 00:06:15 [debug] 30262#0: *5 http script copy: &#34;/index.php/&#34;
+2018/03/21 00:06:15 [debug] 30262#0: *5 http script capture: &#34;aaa&#34;
+2018/03/21 00:06:15 [debug] 30262#0: *5 http script regex end
+2018/03/21 00:06:15 [notice] 30262#0: *5 rewritten data: &#34;/index.php/aaa&#34;, args: &#34;&#34;, client: 127.0.0.1, server: www.blog.qfedu.com, request: &#34;GET /aaa HTTP/1.1&#34;, host: &#34;www.blog.qfe
+du.com&#34;
+
+# last 标记的特别之处，会将rewrite 规则后重写的URL 在进行新一轮的location 选择
+2018/03/21 00:06:15 [debug] 30262#0: *5 test location: &#34;/&#34;
+2018/03/21 00:06:15 [debug] 30262#0: *5 test location: ~ &#34;/index.php&#34;
+2018/03/21 00:06:15 [debug] 30262#0: *5 using configuration &#34;/index.php&#34;
+
+</code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback"># 注释掉 rewrite ^/(.*)$ /index.php/$1 last;
+# curl http://127.0.0.1/aaa -H &#34;HOST: www.blog.qfedu.com&#34;
+# 与此同时 tail www.blog.qfedu.com-error_log , 会发现如下结果:
+
+# 先进行 location 的选择， 最终选择了默认的location &#34;/&#34;
+2018/03/21 00:09:51 [debug] 30296#0: *6 test location: &#34;/&#34;
+2018/03/21 00:09:51 [debug] 30296#0: *6 test location: ~ &#34;/index.php&#34;
+2018/03/21 00:09:51 [debug] 30296#0: *6 using configuration &#34;/&#34;
+
+# 在默认的location 中 命中了rewrite 规则，此时与使用last 关键字不一样的时，它不会再将重写的URL
+# 进行新一轮的location 选择，而是将重新后的URL直接在本Location 中继续处理。
+2018/03/21 00:09:51 [debug] 30296#0: *6 http script regex: &#34;^/(.*)$&#34;
+2018/03/21 00:09:51 [notice] 30296#0: *6 &#34;^/(.*)$&#34; matches &#34;/aaa&#34;, client: 127.0.0.1, server: www.blog.qfedu.com, request: &#34;GET /aaa HTTP/1.1&#34;, host: &#34;www.blog.qfedu.com&#34;
+2018/03/21 00:09:51 [debug] 30296#0: *6 http script copy: &#34;/index.php/&#34;
+2018/03/21 00:09:51 [debug] 30296#0: *6 http script capture: &#34;aaa&#34;
+2018/03/21 00:09:51 [debug] 30296#0: *6 http script regex end
+2018/03/21 00:09:51 [notice] 30296#0: *6 rewritten data: &#34;/index.php/aaa&#34;, args: &#34;&#34;, client: 127.0.0.1, server: www.blog.qfedu.com, request: &#34;GET /aaa HTTP/1.1&#34;, host: &#34;www.blog.qfe
+du.com&#34;
+
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>permanent vs redirect</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">permanent 和 redirect 这两个flag在与rewrite 规则结合使用时，以人类肉眼的可见性来说是没有任何差异的。
+那为什么还要用两个标记呢? 他们的差异在哪里呢?
+permanent， 将重写后的URI 返回给客户端，返回状态码为301。告诉搜索引擎这个重定向是永久重定向。
+redirect，  将重写后的URI 返回给客户端，返回状态码为302。告诉搜索引擎这个重定向是临时重定向。
+也就是说， permanent 和 redirect 的作用是相对于搜索引擎的， 搜索引擎当发现是状态码是301 或者302 时，它本身回去做一些什么事情， 比如SEO优化什么的。但以我们实现的效果上来看, permanent 和 redirect 是没有任何差异的。
+
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>break 和 last vs permanent 和 redirect</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">介绍完了一个上的四个标记，我们从行为表现上去总结一下:
+1）使用 break 和 last 标记, 浏览器地址栏中的地址显示是不会变化的；而permanent 和 redirect 
+   则会变化。
+2) 使用 break 和 last 标记, 只产生了一次网络请求；而permanent 和 redirect 产生了两次网络请求。
+3) 使用 break 和 last 标记的转发规则，只能在同一个域名下进行， 而permanent 和 redirect 却可以在
+   不同域名之间
+
+</code></pre></td></tr></table>
+</div>
+</div><h5 id="set-">set 指令</h5>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">该指令用于设置一个新的变量。语法如下:
+set variable value;
+variable, 变量的名称。注意使用符号 &#34;$&#34;作为变量的第一个字符，且变量不能与Nginx服务器预设的变量名称相同。
+value, 变量的值。 可以使用字符串、其他变量或者变量的组合。
+比如:
+set $id &#34;abc&#34;;
+注意:
+在Nginx中，不管是Nginx系统本身定义的变量，还是由用户定义的变量。其作用域都是都是全局可见的。比如我可以先使用变量，然后再定义变量。
+proxy_set_header TESTheader $id;
+set $id &#34;abc&#34;;
+
+</code></pre></td></tr></table>
+</div>
+</div><h5 id="if-">if 指令</h5>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">条件判断指令。根据条件判断结果处理不同的行为, 可以在server 块和location 块中配置该指令。语法如下:
+if (condition) { ... }
+condition, 判断条件为true/false, 它可以支持一下几种方法:
+* 变量名。 如果变量的值为空字符串或者以“0”开头的任意字符串，if指令认为条件为false,其他情况认为条件为true
+  比如:
+  if ($slow) {
+      ... # Nginx 配置
+  }
+
+* 使用 &#34;=&#34; 或者 &#34;!=&#34; 比较变量和字符串是否相等，相等时if指令认为条件是true ，反之为false
+  比如:
+  if ($request_method = POST){
+      return 405;
+  }
+  注意：这里字符串不需要将引号
+
+* 使用正则表达式对变量进行匹配，匹配成功时if指令认为条件为true, 否则为false。变量与正则表达式之间的关系用
+  &#34;~&#34;、&#34;~*&#34;、&#34;!~&#34;、&#34;!~*&#34; 连接， &#34;~&#34; 表示匹配过程中对大小写敏感， &#34;~*&#34; 表示匹配过程中大小写不敏感; 使用
+  &#34;!~&#34; 和 &#34;!~*&#34; 正好为相应指令的反操作。在正则表达式中，可以使用小括号对变量复制进行截取，在花括号中使
+  用 $1 到 $9 引用截取的值。 比如: 
+  if ($http_user_agent ~ MSIE) {
+      ... # UA 的值是否包含MSIE字符串，如果包含，为true
+  }
+  if ($http_cookie ~* &#34;id=([^;]+)(?:;|$)&#34;) {
+      ... # Nginx 配置， 可以使用$1 和 $2 获取截取到的值
+  }
+  注意:
+  正则表达式若为一个普通的字符串时不需要将引号， 若正则表达式中包含右花括号 &#34;}&#34; 或分号 &#34;;&#34; 字符时， 必须
+  给真个正则表达式添加引号。
+
+* 判断请求的文件是否存在 &#34;-f&#34; 和 &#34;!-f&#34;。 比如:
+  if (-f $request_filename) {
+      ... # 判断请求的文件是否存在
+  }
+  if (!-f $request_filename){
+      ... # 判断请求的文件是否不存在
+  }
+
+* 判断请求的目录是否存在 &#34;-d&#34; 和 &#34;!-d&#34;
+
+* 判断请求的文件是否可以执行 &#34;-x&#34; 和 &#34;!-x&#34;
+
+* 判断请求的目录或者文件是否存在 &#34;-e&#34; 和 &#34;!-e&#34;
+
+</code></pre></td></tr></table>
+</div>
+</div><h5 id="break-">break 指令</h5>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">该指令用于&#34;中断&#34; 相同作用域下的所有 ngx_http_rewrite_module 模块中的指令。这个指令前的所有rewrite 指令将会被执行，而之后的所有 rewrite 指令将被忽略。 该指令在server块、location块及if块中使用。
+
+</code></pre></td></tr></table>
+</div>
+</div><p>Example:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">locaton / {
+    if($slow) {
+        set $id &#34;aa&#34;; # 处于break指令之前，处于有效状态
+        break;
+        set $id2 &#34;bb&#34;; # 处于break指令之后，是一个无效指令
+    }
+}
+
+</code></pre></td></tr></table>
+</div>
+</div><h5 id="return-">return 指令</h5>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">该指令用于完成对请求的处理，直接向客户端返回响应状态代码。处于该指令后的所有Nginx配置都是无效的。该指令可以在server 块 、location块及if块中使用。 语法如下:
+return [text]
+return code URL
+return URL
+code, 返回给客户端的HTTP状态码
+text, 返回给客户端的响应头内容，支持变量的使用。
+URL, 放回给客户端的URL地址
+比如:
+
+</code></pre></td></tr></table>
+</div>
+</div>
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Joken</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-12-26 16:23
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/nginx/">nginx</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/nginx/nginx_7_location%E7%A5%A5%E8%A7%A3/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Nginx_7_location祥解</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/nginx/nginx_5_nginx%E5%8A%A8%E9%9D%99%E5%88%86%E7%A6%BB/">
+            <span class="next-text nav-default">Nginx_5_nginx动静分离</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:your@email.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://localhost:1313" class="iconfont icon-google" title="google"></a>
+      <a href="https://github.com/jiaopanxin/jiaopanxin.github.io" class="iconfont icon-github" title="github"></a>
+      <a href="http://localhost:1313" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="http://localhost:1313" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="http://localhost:1313" class="iconfont icon-douban" title="douban"></a>
+      <a href="http://localhost:1313" class="iconfont icon-pocket" title="pocket"></a>
+      <a href="http://localhost:1313" class="iconfont icon-tumblr" title="tumblr"></a>
+      <a href="http://localhost:1313" class="iconfont icon-instagram" title="instagram"></a>
+      <a href="http://localhost:1313" class="iconfont icon-gitlab" title="gitlab"></a>
+      <a href="http://localhost:1313" class="iconfont icon-bilibili" title="bilibili"></a>
+  <a href="https://jiaopanxin.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  <div class="busuanzi-footer">
+    <span id="busuanzi_container_site_pv"> 本站总访问量 <span id="busuanzi_value_site_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次 </span>
+      <span class="division">|</span>
+    <span id="busuanzi_container_site_uv"> 本站总访客数 <span id="busuanzi_value_site_uv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 人 </span>
+  </div>
+
+  <span class="copyright-year">
+    &copy; 
+    2019 - 
+    2020
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Joken</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  <script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  <script type="text/javascript" src="/lib/fancybox/jquery.fancybox-3.1.20.min.js"></script>
+    <script type="text/javascript" src="/lib/timeago/timeago-3.0.2.min.js"></script>
+    <script type="text/javascript" src="/lib/timeago/timeago.locales-3.0.2.min.js"></script>
+  <script><!-- NOTE: timeago.js uses the language code format like "zh_CN" (underscore and case sensitive) -->
+    var languageCode = "zh-CN".replace(/-/g, '_').replace(/_(.*)/, function ($0, $1) {return $0.replace($1, $1.toUpperCase());});
+    timeago().render(document.querySelectorAll('.timeago'), languageCode);
+    timeago.cancel();  
+  </script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

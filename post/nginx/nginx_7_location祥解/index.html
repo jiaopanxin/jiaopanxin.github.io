@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Nginx_7_location祥解 - Joken Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Joken" /><meta name="description" content="第七章 Nginx Location 详解 location 指令 1 2 3 4 5 6 7 8 9 location 指令可用在虚拟主机server 中， 意味着提供来自客户端的URI或者内部重定向的访问。语法如下: location [modifier] uri" /><meta name="keywords" content="Hugo, theme, even" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.62.0 with theme even" />
+
+
+<link rel="canonical" href="https://jiaopanxin.github.io/post/nginx/nginx_7_location%E7%A5%A5%E8%A7%A3/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link href="/lib/fancybox/jquery.fancybox-3.1.20.min.css" rel="stylesheet">
+
+
+<meta property="og:title" content="Nginx_7_location祥解" />
+<meta property="og:description" content="第七章 Nginx Location 详解 location 指令 1 2 3 4 5 6 7 8 9 location 指令可用在虚拟主机server 中， 意味着提供来自客户端的URI或者内部重定向的访问。语法如下: location [modifier] uri" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://jiaopanxin.github.io/post/nginx/nginx_7_location%E7%A5%A5%E8%A7%A3/" />
+<meta property="article:published_time" content="2019-12-26T16:24:02+08:00" />
+<meta property="article:modified_time" content="2019-12-26T16:24:02+08:00" />
+<meta itemprop="name" content="Nginx_7_location祥解">
+<meta itemprop="description" content="第七章 Nginx Location 详解 location 指令 1 2 3 4 5 6 7 8 9 location 指令可用在虚拟主机server 中， 意味着提供来自客户端的URI或者内部重定向的访问。语法如下: location [modifier] uri">
+<meta itemprop="datePublished" content="2019-12-26T16:24:02&#43;08:00" />
+<meta itemprop="dateModified" content="2019-12-26T16:24:02&#43;08:00" />
+<meta itemprop="wordCount" content="980">
+
+
+
+<meta itemprop="keywords" content="nginx," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Nginx_7_location祥解"/>
+<meta name="twitter:description" content="第七章 Nginx Location 详解 location 指令 1 2 3 4 5 6 7 8 9 location 指令可用在虚拟主机server 中， 意味着提供来自客户端的URI或者内部重定向的访问。语法如下: location [modifier] uri"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Joken Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">首页</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">归档</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">分类</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">关于我</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Joken Blog</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">首页</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">归档</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">分类</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">标签</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">关于我</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Nginx_7_location祥解</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-12-26 16:24 </span>
+        <div class="post-category">
+            <a href="/categories/nginx/"> nginx </a>
+            </div>
+          <span class="more-meta"> 约 980 字 </span>
+          <span class="more-meta"> 预计阅读 2 分钟 </span>
+        <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h4 id="-nginx-location-">第七章 Nginx Location 详解</h4>
+<h5 id="location-">location 指令</h5>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">location 指令可用在虚拟主机server 中， 意味着提供来自客户端的URI或者内部重定向的访问。语法如下:
+location [modifier] uri {...}
+或者是命名 location
+location @name {...}
+[modifier] , 是location 的修饰符，用来定义Nginx 的匹配模式
+uri,         请求的URI
+@name,       定义一个命名的location 区段，这些区段客户端不能直接访问，只能由内部产生的请求访问。例如:
+             try_files 或 error_page 产生的内部请求
+
+</code></pre></td></tr></table>
+</div>
+</div><h5 id="location--1">location 修饰符</h5>
+<p>location 的修饰符包括 =、~、 ~* 、^~ 。基本含义如下:</p>
+<table>
+<thead>
+<tr>
+<th>模式</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>location = /uri</td>
+<td>= 表示精确匹配，只有完全匹配上才能生效</td>
+</tr>
+<tr>
+<td>location ^~ /uri</td>
+<td>^~ 开头对URL路径进行前缀匹配，且规则优先于正则。</td>
+</tr>
+<tr>
+<td>location ~ pattern</td>
+<td>开头表示区分大小写的正则匹配</td>
+</tr>
+<tr>
+<td>location ~* pattern</td>
+<td>开头表示不区分大小写的正则匹配</td>
+</tr>
+<tr>
+<td>location /uri</td>
+<td>不带任何修饰符，也表示前缀匹配，但优先级在正则匹配之后(非精确匹配的情况)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>匹配优先级</strong></p>
+<p>location 的匹配顺序与在配置文件中建立的顺序是不相关的。Nginx 是按照特定的顺序中搜索匹配模式。具体匹配优先级如下:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">1、带有 = 修饰符的location，会最优先被处理。如果发现精确匹配，则Nginx使用该location 的设置。
+2、带有 ^~ 修饰符的location，如果指定的字符串与URI匹配，则Nginx使用该location 的设置。
+4、带有 ~ 和 ~* 修饰符的location，如果正则表达式与URI匹配，则Nginx使用该location 的设置。
+5、不带修饰符的location，如果指定字符串与URI匹配，则Nginx使用该location 的设置。
+6、最后若存在 location /， 则为默认匹配。任何未匹配到其它location的请求都会匹配到。
+
+</code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">(location =)  &gt; (location ^~ 路径) &gt; (location ~,~* 正则顺序) &gt; (location 无修饰的路径) &gt; (/)
+
+</code></pre></td></tr></table>
+</div>
+</div><p>注:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">1）切记与location在配置文件中的顺序无关。
+2）尽量使用单一的location 修饰符去完成任务。不要混合多种修饰符去作业，以免出现优先级问题。
+
+</code></pre></td></tr></table>
+</div>
+</div><h5 id="location--2">location 匹配实例</h5>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">server {
+    listen       80;
+    server_name  www.blog.qfedu.com;
+    root   /data0/www/htdocs/www.blog.qfedu.com;
+    access_log /data0/www/logs/www.blog.qfedu.com-access_log main;
+    error_log  /data0/www/logs/www.blog.qfedu.com-error_log;
+
+    location = / {
+        #[ configuration A ]
+    }
+
+    location /documents/ {
+        # [ configuration B ]
+    }
+
+    location ^~ /images/ {
+       # [ configuration C ]
+    }
+
+    location ~* \.(gif|jpg|jpeg)$ {
+       # [ configuration D ]
+    }
+
+    location / {
+       # [ configuration E ]
+    }
+}
+
+</code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">* 此时若请求的URI 为 /index.html，通过上面的优先级匹配规则应该匹配到 E
+* 此时若请求的URI 为 /1.jpg，通过上面的优先级匹配规则应该匹配到 D
+* 此时若请求的URI 为 /images/xxx，通过上面的优先级匹配规则应该匹配到 C
+
+</code></pre></td></tr></table>
+</div>
+</div>
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Joken</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-12-26 16:24
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/nginx/">nginx</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/nginx/nginx_8_nginx%E6%97%A5%E5%BF%97%E5%8D%87%E7%BA%A7%E4%B8%AA%E6%80%A7%E5%8C%96/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Nginx_8_nginx日志升级个性化</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/nginx/nginx_6_rewrite%E6%8C%87%E4%BB%A4/">
+            <span class="next-text nav-default">Nginx_6_rewrite指令</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:your@email.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://localhost:1313" class="iconfont icon-google" title="google"></a>
+      <a href="https://github.com/jiaopanxin/jiaopanxin.github.io" class="iconfont icon-github" title="github"></a>
+      <a href="http://localhost:1313" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="http://localhost:1313" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="http://localhost:1313" class="iconfont icon-douban" title="douban"></a>
+      <a href="http://localhost:1313" class="iconfont icon-pocket" title="pocket"></a>
+      <a href="http://localhost:1313" class="iconfont icon-tumblr" title="tumblr"></a>
+      <a href="http://localhost:1313" class="iconfont icon-instagram" title="instagram"></a>
+      <a href="http://localhost:1313" class="iconfont icon-gitlab" title="gitlab"></a>
+      <a href="http://localhost:1313" class="iconfont icon-bilibili" title="bilibili"></a>
+  <a href="https://jiaopanxin.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  <div class="busuanzi-footer">
+    <span id="busuanzi_container_site_pv"> 本站总访问量 <span id="busuanzi_value_site_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次 </span>
+      <span class="division">|</span>
+    <span id="busuanzi_container_site_uv"> 本站总访客数 <span id="busuanzi_value_site_uv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 人 </span>
+  </div>
+
+  <span class="copyright-year">
+    &copy; 
+    2019 - 
+    2020
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Joken</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  <script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  <script type="text/javascript" src="/lib/fancybox/jquery.fancybox-3.1.20.min.js"></script>
+    <script type="text/javascript" src="/lib/timeago/timeago-3.0.2.min.js"></script>
+    <script type="text/javascript" src="/lib/timeago/timeago.locales-3.0.2.min.js"></script>
+  <script><!-- NOTE: timeago.js uses the language code format like "zh_CN" (underscore and case sensitive) -->
+    var languageCode = "zh-CN".replace(/-/g, '_').replace(/_(.*)/, function ($0, $1) {return $0.replace($1, $1.toUpperCase());});
+    timeago().render(document.querySelectorAll('.timeago'), languageCode);
+    timeago.cancel();  
+  </script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

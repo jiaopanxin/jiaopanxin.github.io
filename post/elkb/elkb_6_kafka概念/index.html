@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>ELKB_6_kafka概念 - Joken Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Joken" /><meta name="description" content="发布-订阅模型 通过发布-订阅模型，各个子模块之间做到解耦。各个子模块只需要知道自己需要往中间件——Kafka 里取值还是存值即可。简单的抽象模" /><meta name="keywords" content="Hugo, theme, even" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.62.0 with theme even" />
+
+
+<link rel="canonical" href="https://jiaopanxin.github.io/post/elkb/elkb_6_kafka%E6%A6%82%E5%BF%B5/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link href="/lib/fancybox/jquery.fancybox-3.1.20.min.css" rel="stylesheet">
+
+
+<meta property="og:title" content="ELKB_6_kafka概念" />
+<meta property="og:description" content="发布-订阅模型 通过发布-订阅模型，各个子模块之间做到解耦。各个子模块只需要知道自己需要往中间件——Kafka 里取值还是存值即可。简单的抽象模" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://jiaopanxin.github.io/post/elkb/elkb_6_kafka%E6%A6%82%E5%BF%B5/" />
+<meta property="article:published_time" content="2019-12-26T12:14:30+08:00" />
+<meta property="article:modified_time" content="2019-12-26T12:14:30+08:00" />
+<meta itemprop="name" content="ELKB_6_kafka概念">
+<meta itemprop="description" content="发布-订阅模型 通过发布-订阅模型，各个子模块之间做到解耦。各个子模块只需要知道自己需要往中间件——Kafka 里取值还是存值即可。简单的抽象模">
+<meta itemprop="datePublished" content="2019-12-26T12:14:30&#43;08:00" />
+<meta itemprop="dateModified" content="2019-12-26T12:14:30&#43;08:00" />
+<meta itemprop="wordCount" content="2256">
+
+
+
+<meta itemprop="keywords" content="ELKB," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="ELKB_6_kafka概念"/>
+<meta name="twitter:description" content="发布-订阅模型 通过发布-订阅模型，各个子模块之间做到解耦。各个子模块只需要知道自己需要往中间件——Kafka 里取值还是存值即可。简单的抽象模"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Joken Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">首页</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">归档</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">分类</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">关于我</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Joken Blog</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">首页</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">归档</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">分类</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">标签</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">关于我</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">ELKB_6_kafka概念</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-12-26 12:14 </span>
+        <div class="post-category">
+            <a href="/categories/elkb/"> ELKB </a>
+            </div>
+          <span class="more-meta"> 约 2256 字 </span>
+          <span class="more-meta"> 预计阅读 5 分钟 </span>
+        <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#-">发布-订阅模型</a></li>
+    <li><a href="#heading">消息和批处理</a></li>
+    <li><a href="#heading-1">模式</a></li>
+    <li><a href="#heading-2">主题和分区</a></li>
+    <li><a href="#heading-3">生产者和消费者</a></li>
+    <li><a href="#heading-4">中间人和集群</a></li>
+    <li><a href="#heading-5">多集群</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#heading-6">多生产者</a></li>
+    <li><a href="#heading-7">多消费者</a></li>
+    <li><a href="#heading-8">基于磁盘的有效期</a></li>
+    <li><a href="#heading-9">拓展性</a></li>
+    <li><a href="#heading-10">高性能</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#heading-11">应用</a>
+      <ul>
+        <li><a href="#heading-12">活动跟踪</a></li>
+        <li><a href="#heading-13">系统监控和日志记录</a></li>
+        <li><a href="#heading-14">发消息</a></li>
+        <li><a href="#heading-15">流式处理</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li><a href="#kafka--1">Kafka 的诞生</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="-">发布-订阅模型</h2>
+<p>通过发布-订阅模型，各个子模块之间做到解耦。各个子模块只需要知道自己需要往中间件——Kafka 里取值还是存值即可。简单的抽象模型如下图所示：</p>
+<p><img src="/images/elkb/elkb-37.png" alt=""></p>
+<p>Kafka 的出现，做到了子系统之间的解耦合。因此，它也被称为「分布式日志提交系统」或者「分布式流处理系统」。下面是 Kafka 的一些基本概念：</p>
+<h2 id="heading">消息和批处理</h2>
+<p>Kafka 处理的数据单元叫做「消息」，一种类似于数据库中「行」或者「记录」的概念。这些数据单元，对于 Kafka 而言，并没有特殊意义，都是字节数组。但是，每个消息可以拥有描述性的元数据——Key，这些 Key 通常用来表示消息应该存放的分区。为了效率，Kafka 里的消息都是批处理的，同一批（Batch）的消息主题和分区相同，这样的设计有助于减少单消息在网络传输带来的开销。当然，这种处理方式，也是一种在吞吐量和网络时延里的折中方案。</p>
+<h2 id="heading-1">模式</h2>
+<p>为了让消息具备更加的可读性，Kafka 使用模式（Schema）来管理数据类型，如 JSON、XML 等等。为了向后兼容，或者做到可拓展性，选择合适的 Schema 非常重要。</p>
+<h2 id="heading-2">主题和分区</h2>
+<p>Kafka 里的消息按主题分类。鉴于 Kafka 里的消息是按追加、从头到尾读取的方式，使用分区可以大大提高 Kafka 的读取效率，也提供了系统的可拓展性。消息写入分区的方式入下图所示：</p>
+<p><img src="/images/elkb/elkb-38.png" alt=""></p>
+<p>一个主题的消息，在类似于 Kafka 这样的系统中，被称为——「流」。</p>
+<h2 id="heading-3">生产者和消费者</h2>
+<p>Kafka 有两个重要的概念：生产者和消费者；两个高级的客户端（Kafka 使用者）接口：集成 Kafka 的 Kafka Connect API 和操作 Kafka 的 Kafka Stream 接口。</p>
+<p><strong>生产者</strong>：创建消息的主体。可以通过不同的 Key 把消息发往不同的主题中去，还可以根据用户自定义的行为发送日志。
+<strong>消费者</strong>：读取消息的主体。消费者追踪每个分区的 offset 的值，决定从哪里读取消息。Zookeeper 或者 Kafka 可以存储 offset 的值。共同消费一个主题的消费者，被称为「消费组」。消费组中的消费者和主题中的分区的队列关系，被称为「消费者所有权」。使用如下图所示的消费组，可以使 Kafka 更便于水平拓展：</p>
+<p><img src="/images/elkb/elkb-39.png" alt=""></p>
+<h2 id="heading-4">中间人和集群</h2>
+<p><strong>中间人</strong>：单个的 Kafka 服务器叫做「中间人」（Broker）。一个 Kafka 中间人，接收生产者发来的消费，分配偏移量，并存储入物理空间中去；同时，中间人还接收消费者的请求，把物理空间里的消息响应回去。
+<strong>集群</strong>：一组协同工作的中间人叫做集群。在一个集群中，会有一个中间人充当集群控制器的角色，该控制器负责监控中间人的状态。在集群中，独占分区的中间人叫做该分区的「头头」（Leader）。多个中间人共享分区，可以使消息进行「主从复制」。当一个中间人挂掉，其它的中间人可接管头头的角色。当然前提是，接管头头角色的中间人之前可以和前头头联通。下图是一个集群里，不同中间人间复制消息的图示：</p>
+<p><img src="/images/elkb/elkb-40.png" alt=""></p>
+<p>Kafka 还有一个重要的概念：保质期（Retention），表示消息在 Kafka 服务器里可以保留的时长。Kafka 可以根据不同的策略，配置服务器里消息的保质期。如：根据消息的大小（达到特定大小后失效）、根据时间（指定时间后过期）配置。</p>
+<h2 id="heading-5">多集群</h2>
+<p>随着业务的拓展，如下需求通常会被提出：</p>
+<ul>
+<li>数据类型分离</li>
+<li>安全因素的数据隔离</li>
+<li>多数据中心（灾备）</li>
+</ul>
+<p>举个例子，不同集群间可以通过 MirrorMaker 工具进行数据复制。简而言之，就是通过该工具，从一个集群消费消息，然后向另外一个集群生产消息。下面是一个通过 MirrorMaker 进行集群中消息复制的图例:</p>
+<p><img src="/images/elkb/elkb-41.png" alt=""></p>
+<h1 id="-kafka">为什么选择 Kafka</h1>
+<p>虽然有很多发布/订阅式的系统，但是选择 Kafka 是出于以下原因。</p>
+<h2 id="heading-6">多生产者</h2>
+<p>Kafka 可以无缝接入多个生产者。多个消费者可以消费同一个主题内的消息，而无需知道该主题内的消息来自哪个生产者。一个简单的例子就是：多个微服务往同一个主题中投放消息，然后该主题的消息「聚合」了多个应用。</p>
+<h2 id="heading-7">多消费者</h2>
+<p>Kafka 多消费者模型，表现为多个消费者互不干扰地消费同一主题内的消息。这也是 Kafka 和其它消息队列不同的地方。</p>
+<h2 id="heading-8">基于磁盘的有效期</h2>
+<p>Kafka 中的消息会被写入磁盘，得益于 Kafka 灵活的消息过期策略，磁盘中的消息的有效期是可配置的。鉴于此，Kafka 不会有丢消息的危险。即便应用重启，它仍能够借助 Kafka 从结束的地方重新开始。</p>
+<h2 id="heading-9">拓展性</h2>
+<p>Kafka 拥有灵活的拓展性配置，这意味着：用户可以根据需求拓展 Kafka 的 Broker 的数量来接收和处理任意数量的数据；多 Broker 可以接管单 Broker 中的错误。</p>
+<h2 id="heading-10">高性能</h2>
+<p>上述 <code>多生产者/消费者</code>、<code>可拓展性</code>、<code>灵活的有效期配置</code> 造就了 Kafka 的高性能。</p>
+<h1 id="kafka-">Kafka 生态系统</h1>
+<p>基于 Kafka 的生产/消费模型，有一系列的生产和消费的技术。各种处理消息的技术，以统一的接口方式，构成了 Kafka 的生态系统。Kafka 生态系统如下图所示：</p>
+<p><img src="/images/elkb/elkb-42.png" alt=""></p>
+<h2 id="heading-11">应用</h2>
+<h3 id="heading-12">活动跟踪</h3>
+<p>Kafka 可以记录用户访问前端应用的活动日志，这也是 LinkedIn 开发 Kafka 的初衷。Kafka 搜集的用户点击鼠标的事件、浏览页面的事件、更改个人主页的事件，均可以用作后端程序处理，使其变成有价值的产物。</p>
+<h3 id="heading-13">系统监控和日志记录</h3>
+<p>可以向 Kafka 中发送系统的运行日志，通过分析这些日志，可以对系统的各个指标进行评估。同时，Kafka 记录的日志可供其它的日志分析系统消费。</p>
+<h3 id="heading-14">发消息</h3>
+<p>Kafka 可以向其它应用发送中间件的消息，如：数据库有改动，可以将改动的信息发往应用程序。</p>
+<h3 id="heading-15">流式处理</h3>
+<p>Kafka 提供的对数据的流式操作，和 Hadoop 的 Map/Reduce 模型类似，可以做到数据的实时处理。</p>
+<h1 id="kafka">Kafka.原点</h1>
+<blockquote>
+<p>Kafka 设计的初衷是处理不同类型的数据，实现一个简单、结构化的高性能系统，以实时地分析用户行为和监控系统状态。
+—— Jeff Weiner LinkedIn CEO</p>
+</blockquote>
+<h2 id="kafka--1">Kafka 的诞生</h2>
+<p>由 Jay kreps 主导的开发团队希望构建一个能同时满足监控系统和追踪系统的消息系统，最初的目标是：</p>
+<ul>
+<li>通过 push-pull 模型对生产者和消费者解耦</li>
+<li>提供消息持久性支持多消费者</li>
+<li>优化消息的高吞吐率</li>
+<li>允许系统水平拓展</li>
+</ul>
+<p>最终，开发出来的 Kafka 在接口上和典型的消息系统的 <strong>发布/订阅</strong> 一致，但在存储层上，更像一个日志聚合系统。借助 Apache Avro 进行消息序列化，Kafka 能够做到大规模的消息处理。</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Joken</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-12-26 12:14
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/elkb/">ELKB</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/nginx/nginx_1_nginx%E5%88%9D%E6%8E%A2/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Nginx_1_nginx初探</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/elkb/elkb_5_elkb%E6%85%A2%E6%97%A5%E5%BF%97%E6%8A%A5%E8%AD%A6/">
+            <span class="next-text nav-default">ELKB_5_ELKB慢日志报警</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:your@email.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://localhost:1313" class="iconfont icon-google" title="google"></a>
+      <a href="https://github.com/jiaopanxin/jiaopanxin.github.io" class="iconfont icon-github" title="github"></a>
+      <a href="http://localhost:1313" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="http://localhost:1313" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="http://localhost:1313" class="iconfont icon-douban" title="douban"></a>
+      <a href="http://localhost:1313" class="iconfont icon-pocket" title="pocket"></a>
+      <a href="http://localhost:1313" class="iconfont icon-tumblr" title="tumblr"></a>
+      <a href="http://localhost:1313" class="iconfont icon-instagram" title="instagram"></a>
+      <a href="http://localhost:1313" class="iconfont icon-gitlab" title="gitlab"></a>
+      <a href="http://localhost:1313" class="iconfont icon-bilibili" title="bilibili"></a>
+  <a href="https://jiaopanxin.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  <div class="busuanzi-footer">
+    <span id="busuanzi_container_site_pv"> 本站总访问量 <span id="busuanzi_value_site_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次 </span>
+      <span class="division">|</span>
+    <span id="busuanzi_container_site_uv"> 本站总访客数 <span id="busuanzi_value_site_uv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 人 </span>
+  </div>
+
+  <span class="copyright-year">
+    &copy; 
+    2019 - 
+    2020
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Joken</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  <script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  <script type="text/javascript" src="/lib/fancybox/jquery.fancybox-3.1.20.min.js"></script>
+    <script type="text/javascript" src="/lib/timeago/timeago-3.0.2.min.js"></script>
+    <script type="text/javascript" src="/lib/timeago/timeago.locales-3.0.2.min.js"></script>
+  <script><!-- NOTE: timeago.js uses the language code format like "zh_CN" (underscore and case sensitive) -->
+    var languageCode = "zh-CN".replace(/-/g, '_').replace(/_(.*)/, function ($0, $1) {return $0.replace($1, $1.toUpperCase());});
+    timeago().render(document.querySelectorAll('.timeago'), languageCode);
+    timeago.cancel();  
+  </script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>消息队列 on Joken Blog</title>
+    <link>https://jiaopanxin.github.io/categories/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/</link>
+    <description>Recent content in 消息队列 on Joken Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Thu, 26 Dec 2019 10:18:31 +0800</lastBuildDate>
+    
+	<atom:link href="https://jiaopanxin.github.io/categories/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>消息队列介绍</title>
+      <link>https://jiaopanxin.github.io/post/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E4%BB%8B%E7%BB%8D/</link>
+      <pubDate>Thu, 26 Dec 2019 10:18:31 +0800</pubDate>
+      
+      <guid>https://jiaopanxin.github.io/post/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E4%BB%8B%E7%BB%8D/</guid>
+      <description>1.什么是消息队列？ 首先，我们来看看什么是消息队列，维基百科里的解释翻译过来如下： 队列提供了一种异步通信协议，这意味着消息的发送者和接收者不</description>
+    </item>
+    
+  </channel>
+</rss>

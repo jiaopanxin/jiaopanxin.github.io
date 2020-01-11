@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Nginx_1_nginx初探 - Joken Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Joken" /><meta name="description" content="第一章 Nginx 初探 特性介绍 Nginx 提供基本HTTP服务，可以作为HTTP 代理服务器和反向代理服务器，支持通过缓存加速访问，可以完成简单的负载均衡和容错，" /><meta name="keywords" content="Hugo, theme, even" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.62.0 with theme even" />
+
+
+<link rel="canonical" href="https://jiaopanxin.github.io/post/nginx/nginx_1_nginx%E5%88%9D%E6%8E%A2/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link href="/lib/fancybox/jquery.fancybox-3.1.20.min.css" rel="stylesheet">
+
+
+<meta property="og:title" content="Nginx_1_nginx初探" />
+<meta property="og:description" content="第一章 Nginx 初探 特性介绍 Nginx 提供基本HTTP服务，可以作为HTTP 代理服务器和反向代理服务器，支持通过缓存加速访问，可以完成简单的负载均衡和容错，" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://jiaopanxin.github.io/post/nginx/nginx_1_nginx%E5%88%9D%E6%8E%A2/" />
+<meta property="article:published_time" content="2019-12-26T16:17:15+08:00" />
+<meta property="article:modified_time" content="2019-12-26T16:17:15+08:00" />
+<meta itemprop="name" content="Nginx_1_nginx初探">
+<meta itemprop="description" content="第一章 Nginx 初探 特性介绍 Nginx 提供基本HTTP服务，可以作为HTTP 代理服务器和反向代理服务器，支持通过缓存加速访问，可以完成简单的负载均衡和容错，">
+<meta itemprop="datePublished" content="2019-12-26T16:17:15&#43;08:00" />
+<meta itemprop="dateModified" content="2019-12-26T16:17:15&#43;08:00" />
+<meta itemprop="wordCount" content="2563">
+
+
+
+<meta itemprop="keywords" content="nginx," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Nginx_1_nginx初探"/>
+<meta name="twitter:description" content="第一章 Nginx 初探 特性介绍 Nginx 提供基本HTTP服务，可以作为HTTP 代理服务器和反向代理服务器，支持通过缓存加速访问，可以完成简单的负载均衡和容错，"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Joken Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">首页</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">归档</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">分类</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">关于我</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Joken Blog</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">首页</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">归档</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">分类</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">标签</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">关于我</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Nginx_1_nginx初探</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-12-26 16:17 </span>
+        <div class="post-category">
+            <a href="/categories/nginx/"> nginx </a>
+            </div>
+          <span class="more-meta"> 约 2563 字 </span>
+          <span class="more-meta"> 预计阅读 6 分钟 </span>
+        <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h4 id="-nginx-">第一章 Nginx 初探</h4>
+<h5 id="heading">特性介绍</h5>
+<ul>
+<li>Nginx 提供基本HTTP服务，可以作为HTTP 代理服务器和反向代理服务器，支持通过缓存加速访问，可以完成简单的负载均衡和容错，支持包过滤功能，支持SSL等</li>
+<li>Nginx 提供高级HTTP服务，可以进行自定义配置，支持虚拟主机，支持URL重定向，支持网络监控，支持流媒体传输等</li>
+<li>Nginx 作为邮寄代理服务器是最早开发这个产品的目的之一，他支持IMAP/POP3 代理服务功能，支持内部SMTP代理服务功能。</li>
+</ul>
+<h5 id="nginx-vs-apache">Nginx VS Apache</h5>
+<p><strong>1.内核和功能上的比较</strong></p>
+<table>
+<thead>
+<tr>
+<th align="left">特性</th>
+<th align="left">Nginx</th>
+<th align="left">Apache</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">请求管理</td>
+<td align="left">事件驱动模型<!-- raw HTML omitted -->使用异步套接字处理，较少了内存和CPU开销</td>
+<td align="left">同步套接字、进程和线程<!-- raw HTML omitted -->每个请求都要使用一个单独的进程或线程，使用同步套接字</td>
+</tr>
+<tr>
+<td align="left">设计语言</td>
+<td align="left">C</td>
+<td align="left">C、C++</td>
+</tr>
+<tr>
+<td align="left">可移植性</td>
+<td align="left">多平台</td>
+<td align="left">多平台</td>
+</tr>
+<tr>
+<td align="left">诞生时间</td>
+<td align="left">2002</td>
+<td align="left">1994</td>
+</tr>
+</tbody>
+</table>
+<p><strong>2.一般功能比较</strong></p>
+<table>
+<thead>
+<tr>
+<th>功能</th>
+<th>Nginx</th>
+<th>Apache</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HTTPS支持</td>
+<td>作为模块支持</td>
+<td>作为模块支持</td>
+</tr>
+<tr>
+<td>虚拟主机</td>
+<td>原生支持</td>
+<td>原生支持</td>
+</tr>
+<tr>
+<td>CGI支持</td>
+<td>仅支持FastCGI</td>
+<td>支持CGI和FastCGI</td>
+</tr>
+<tr>
+<td>系统模块</td>
+<td>静态模块系统</td>
+<td>动态模块系统</td>
+</tr>
+</tbody>
+</table>
+<p>从以上功能上的对比，我们很难发现那些功能Apache无法实现。那我们为什么更喜欢用Nginx 呢，Nginx 相对</p>
+<p>Apache 有那些有点呢？</p>
+<p><strong>3.Nginx相对apache的优点</strong></p>
+<ul>
+<li>
+<p>轻量级，同样起web 服务比Apache 占用更少的内存及资源</p>
+</li>
+<li>
+<p>静态处理，Nginx 静态处理性能比 Apache 高 3倍以上</p>
+</li>
+<li>
+<p>抗并发，Nginx 处理请求是异步非阻塞的，而Apache则是阻塞型的。在高并发下Nginx 能保持低资源低消耗高性能。在Apache+PHP（prefork）模式下，如果PHP处理慢或者前端压力很大的情况下，很容易出Apache进程数飙升，从而拒绝服务的现象。</p>
+</li>
+<li>
+<p>高度模块化的设计，编写模块相对简单</p>
+</li>
+<li>
+<p>社区活跃，各种高性能模块出品迅速</p>
+</li>
+</ul>
+<h5 id="nginx-">Nginx 架构</h5>
+<p><img src="/images/nginx/nginx-1.png" alt=""></p>
+<p>上图是Nginx的架构，我们将从各个维度去对它做一个初步的认识。</p>
+<p><strong>1.用户维度</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">从用户维度上看， Nginx 对用户提供了HTTP服务、HTTPS服务，已经我们不常用的邮件代理服务等。
+当然了，收费版还提供了TCP的入口，这里我们不提。
+
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>2.进程维度</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">Nginx 至少存在两种进程， 一种进程叫做Master， 另一种进程叫做Worker。若开启了Nginx的 cache功能，将会启动 cache 进程。
+
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>3.功能维度</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">Nginx 可以同后端的PHP-FPM 以FastCGI协议进行通信，可以通过Memcache协议代理 memcached 服务。同样可以作为反向代理，去代理HTTP服务。为了加速用户的访问速度，可以开启他的缓存功能。
+
+</code></pre></td></tr></table>
+</div>
+</div><h5 id="nginx--1">Nginx 安装</h5>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">这里的安装以源码安装为主。且主要以Linux 系统上的安装为准，其他系统安装方式忽略。
+
+</code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">// 确保系统安装了 pcre 软件包，因为Nginx 的 rewrite 模块要依赖此软件包
+# yum -y install pcre pcre-devel
+// 到 Nginx 的官网 http://nginx.org/download/ ， 下载源代码文件。
+# wget http://nginx.org/download/nginx-1.9.9.tar.gz
+# tar zxvf nginx-1.9.9.tar.gz
+# cd nginx-1.9.9
+# ./configure \
+  --prefix=/usr/local/nginx \
+  --without-select_module \
+  --without-poll_module \
+  --with-debug \
+  --with-http_ssl_module \
+  --with-http_realip_module \
+  --with-http_addition_module \
+  --with-http_sub_module \
+  --with-http_dav_module \
+  --with-http_flv_module \
+  --with-http_xslt_module \
+  --with-http_gzip_static_module \
+  --with-http_random_index_module \
+  --with-http_secure_link_module \
+  --with-http_degradation_module \
+  --with-http_stub_status_module \
+  --with-cc=`which gcc`
+ # make
+ // 或者
+ # make -j 4 //加快编译速度, 有多少个CPU核心，就可以写多少。
+
+ // 经过make install 之后， nginx 程序就被安装在了/usr/local/nginx 这个目录中。
+ # make install
+
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>编译时可能出现的错误</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span><span class="lnt">71
+</span><span class="lnt">72
+</span><span class="lnt">73
+</span><span class="lnt">74
+</span><span class="lnt">75
+</span><span class="lnt">76
+</span><span class="lnt">77
+</span><span class="lnt">78
+</span><span class="lnt">79
+</span><span class="lnt">80
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">可能出现错误
+在配置信息./configure --prefix=/usr/local/nginx 的时，出现错误：
+
+/configure: error: the HTTP rewrite module requires the PCRE library.
+
+解决方法：安装pcre
+
+yum -y install pcre pcre-devel
+
+-y 是跳过所有需要手动确认的环节
+
+缺少ssl错误，错误信息如下：
+
+./configure: error: the HTTP cache module requires md5 functions
+from OpenSSL library.   You can either disable the module by using
+--without-http-cache option, or install the OpenSSL library into the system,
+or build the OpenSSL library statically from the source with nginx by using
+--with-http_ssl_module --with-openssl=&lt;path&gt; options.
+
+解决方法：安装openssl
+
+yum -y install openssl openssl-devel
+
+缺少编译器，错误信息如下：
+
+./configure: error: C compiler cc is not found
+
+解决方法：安装gcc-c++
+
+yum -y install gcc-c++ autoconf automake
+
+autoconf是自动配置，automake是自动编译
+缺少zlib包，错误信息如下：
+
+./configure: error: the HTTP gzip module requires the zlib library.
+You can either disable the module by using –without-http_gzip_module
+option, or install the zlib library into the system, or build the zlib
+library
+statically from the source with nginx by using –with-zlib=&lt;path&gt; option.
+
+解决方法：安装zlib
+
+yum install -y zlib-devel
+
+确实libxml2，错误信息如下：
+
+./configure: error: the HTTP XSLT module requires the libxml2/libxslt
+libraries. You can either do not enable the module or install the libraries.
+
+解决方法：
+
+yum -y install libxml2-devel
+yum -y install libxslt-devel
+
+http_image_filter_module是nginx提供的集成图片处理模块，需要gd-devel的支持，错误信息如下：
+
+./configure: error: the HTTP image filter module requires the GD library.
+You can either do not enable the module or install the libraries.
+
+解决方法：
+
+yum -y install gd-devel
+
+缺少ExtUtils，错误信息如下：
+
+./configure: error: perl module ExtUtils::Embed is required
+
+解决方法：
+
+yum -y install perl-devel perl-ExtUtils-Embed
+
+缺少GeoIP，错误信息如下：
+
+./configure: error: the GeoIP module requires the GeoIP library.
+You can either do not enable the module or install the library.
+
+解决方法：
+
+yum -y install GeoIP GeoIP-devel GeoIP-data
+
+</code></pre></td></tr></table>
+</div>
+</div><h5 id="nginx--2">Nginx 启动、停止、升级</h5>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">这里以上文中，Nginx 的安装目录为/usr/local/nginx 为背景进行实验。若Nginx 被安装在其他目录中， 
+请修正下文中操作nginx 的路径。
+
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>语法检查</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">/usr/local/nginx/sbin/nginx -t
+
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>启动</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">/usr/local/nginx/sbin/nginx
+
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>停止</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">/usr/local/nginx/sbin/nginx -s stop
+
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>平滑重启</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">/usr/local/nginx/sbin/nginx -s reload
+
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>注意</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">对 Nginx 的操作， 尽量不要使用相对路径。比如我们使用的相对路径启动
+# ./nginx
+# ps -ef |grep nginx |grep -v grep
+root      48138      1  0 10:01 ?        00:00:00 nginx: master process ./nginx
+nobody    48139  48138  0 10:01 ?        00:00:00 nginx: worker process
+
+# /usr/local/nginx/sbin/nginx
+# ps -ef |grep nginx |grep -v grep
+root      48149      1  0 10:02 ?        00:00:00 nginx: master process /usr/local/nginx/sbin/nginx
+nobody    48150  48149  0 10:02 ?        00:00:00 nginx: worker process
+
+通过ps ，我们发现使用相对路径启动的Nginx 在进程信息里也是一个相对路径的形式。这个形式对运维特别不友好。若我们根本不知道Nginx 的安装路径，则没有办法对Nginx 做下一步操作。
+
+</code></pre></td></tr></table>
+</div>
+</div><p>在Nginx 服务的启停方法中，有一类是通过信号机制来实现的。Nginx 服务在运行时会保持一个主进程Master和一个或多个worker process 工作进程。 我们通过给Nginx 服务的主继承发送信号就可以控制服务的启停了。</p>
+<p><strong>那Nginx 服务可以接受的信号有哪些呢</strong></p>
+<table>
+<thead>
+<tr>
+<th>信号</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TERM或INT</td>
+<td>快速停止Nginx 服务</td>
+</tr>
+<tr>
+<td>QUIT</td>
+<td>平滑停止Nginx 服务</td>
+</tr>
+<tr>
+<td>HUP</td>
+<td>使用新的配置文件启动进程，之后平缓停止原有进程，也就是所谓的&quot;平滑重启&rdquo;</td>
+</tr>
+<tr>
+<td>USR1</td>
+<td>重新打开日志文件，平常用于日志切割</td>
+</tr>
+<tr>
+<td>USR2</td>
+<td>使用新版本的Nginx 文件启动服务，之后平缓停止原有的Nginx进程，也就是所谓的“平滑升级”</td>
+</tr>
+<tr>
+<td>WINCH</td>
+<td>平缓停止worker process ，用于Nginx 服务器平滑升级</td>
+</tr>
+</tbody>
+</table>
+<p><strong>那么如何去手动发送信号去停止、升级服务呢</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">kill SIGNAL PID
+
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>停止服务</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">kill TERM PID
+kill QUIT PID
+
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>平滑重启</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">kill HUP  PID
+
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>升级服务</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">kill USR2 PID
+
+</code></pre></td></tr></table>
+</div>
+</div>
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Joken</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-12-26 16:17
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/nginx/">nginx</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/nginx/nginx_2_nginx%E9%85%8D%E7%BD%AE/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Nginx_2_nginx配置</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/elkb/elkb_6_kafka%E6%A6%82%E5%BF%B5/">
+            <span class="next-text nav-default">ELKB_6_kafka概念</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:your@email.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://localhost:1313" class="iconfont icon-google" title="google"></a>
+      <a href="https://github.com/jiaopanxin/jiaopanxin.github.io" class="iconfont icon-github" title="github"></a>
+      <a href="http://localhost:1313" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="http://localhost:1313" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="http://localhost:1313" class="iconfont icon-douban" title="douban"></a>
+      <a href="http://localhost:1313" class="iconfont icon-pocket" title="pocket"></a>
+      <a href="http://localhost:1313" class="iconfont icon-tumblr" title="tumblr"></a>
+      <a href="http://localhost:1313" class="iconfont icon-instagram" title="instagram"></a>
+      <a href="http://localhost:1313" class="iconfont icon-gitlab" title="gitlab"></a>
+      <a href="http://localhost:1313" class="iconfont icon-bilibili" title="bilibili"></a>
+  <a href="https://jiaopanxin.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  <div class="busuanzi-footer">
+    <span id="busuanzi_container_site_pv"> 本站总访问量 <span id="busuanzi_value_site_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次 </span>
+      <span class="division">|</span>
+    <span id="busuanzi_container_site_uv"> 本站总访客数 <span id="busuanzi_value_site_uv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 人 </span>
+  </div>
+
+  <span class="copyright-year">
+    &copy; 
+    2019 - 
+    2020
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Joken</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  <script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  <script type="text/javascript" src="/lib/fancybox/jquery.fancybox-3.1.20.min.js"></script>
+    <script type="text/javascript" src="/lib/timeago/timeago-3.0.2.min.js"></script>
+    <script type="text/javascript" src="/lib/timeago/timeago.locales-3.0.2.min.js"></script>
+  <script><!-- NOTE: timeago.js uses the language code format like "zh_CN" (underscore and case sensitive) -->
+    var languageCode = "zh-CN".replace(/-/g, '_').replace(/_(.*)/, function ($0, $1) {return $0.replace($1, $1.toUpperCase());});
+    timeago().render(document.querySelectorAll('.timeago'), languageCode);
+    timeago.cancel();  
+  </script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

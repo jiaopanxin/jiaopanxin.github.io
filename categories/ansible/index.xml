@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>ansible on Joken Blog</title>
+    <link>https://jiaopanxin.github.io/categories/ansible/</link>
+    <description>Recent content in ansible on Joken Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Wed, 25 Dec 2019 20:16:26 +0800</lastBuildDate>
+    
+	<atom:link href="https://jiaopanxin.github.io/categories/ansible/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Ansible_7_ansible_Jinjia2</title>
+      <link>https://jiaopanxin.github.io/post/ansible/ansible_7_ansible_jinja2/</link>
+      <pubDate>Wed, 25 Dec 2019 20:16:26 +0800</pubDate>
+      
+      <guid>https://jiaopanxin.github.io/post/ansible/ansible_7_ansible_jinja2/</guid>
+      <description>第 7 章 Ansible Jinja2模板 1 2 3 4 5 目前Nginx的配置文件在所有的服务器上都是相同的,但我希望能根据每一台服务器的性能去定制服务的启动进程。</description>
+    </item>
+    
+    <item>
+      <title>Ansible_6_ansible任务控制</title>
+      <link>https://jiaopanxin.github.io/post/ansible/ansible_6_ansible%E4%BB%BB%E5%8A%A1%E6%8E%A7%E5%88%B6/</link>
+      <pubDate>Wed, 25 Dec 2019 20:15:22 +0800</pubDate>
+      
+      <guid>https://jiaopanxin.github.io/post/ansible/ansible_6_ansible%E4%BB%BB%E5%8A%A1%E6%8E%A7%E5%88%B6/</guid>
+      <description>第 6 章 Ansible 任务控制 1 2 这里主要来介绍PlayBook中的任务控制，任务控制类似于编程语言中的if ... 、for ... 等逻辑控制语句。这里我们给出一个实</description>
+    </item>
+    
+    <item>
+      <title>Ansible_5_ansible变量</title>
+      <link>https://jiaopanxin.github.io/post/ansible/ansible_5_ansible%E5%8F%98%E9%87%8F/</link>
+      <pubDate>Wed, 25 Dec 2019 20:14:02 +0800</pubDate>
+      
+      <guid>https://jiaopanxin.github.io/post/ansible/ansible_5_ansible%E5%8F%98%E9%87%8F/</guid>
+      <description>第 5 章 Ansible 变量 1 2 我们在PlayBook一节中，将PlayBook类比成了Linux中的shell。那么它作为一门Ansible特殊的语言，肯</description>
+    </item>
+    
+    <item>
+      <title>Ansible_4_playbook剧本</title>
+      <link>https://jiaopanxin.github.io/post/ansible/ansible_4_playbook%E5%89%A7%E6%9C%AC/</link>
+      <pubDate>Wed, 25 Dec 2019 20:12:05 +0800</pubDate>
+      
+      <guid>https://jiaopanxin.github.io/post/ansible/ansible_4_playbook%E5%89%A7%E6%9C%AC/</guid>
+      <description>1 2 通过对 AD-HOC 的学习，我们发现 AD-HOC 每次只能在被管理节点上执行简单的命令。而日常工作中，我们往往面临的是一系列的复杂操作，例如我们有可能需要安装软</description>
+    </item>
+    
+    <item>
+      <title>Ansible_3_ad_hoc以及模块</title>
+      <link>https://jiaopanxin.github.io/post/ansible/ansible_3_ad_hoc%E4%BB%A5%E5%8F%8A%E6%A8%A1%E5%9D%97/</link>
+      <pubDate>Wed, 25 Dec 2019 20:10:28 +0800</pubDate>
+      
+      <guid>https://jiaopanxin.github.io/post/ansible/ansible_3_ad_hoc%E4%BB%A5%E5%8F%8A%E6%A8%A1%E5%9D%97/</guid>
+      <description>第 3 章 Ansible Ad-Hoc 3.1 命令格式 我们在快速入门中执行的Ansible 命令，类似于我们的批处理命令。在Ansible 中统称为Ansible Ad-Hoc。 其</description>
+    </item>
+    
+    <item>
+      <title>Ansible_2_ansible资产</title>
+      <link>https://jiaopanxin.github.io/post/ansible/ansible_2_ansible%E8%B5%84%E4%BA%A7/</link>
+      <pubDate>Wed, 25 Dec 2019 20:03:21 +0800</pubDate>
+      
+      <guid>https://jiaopanxin.github.io/post/ansible/ansible_2_ansible%E8%B5%84%E4%BA%A7/</guid>
+      <description>第 2 章 Ansible 资产 在快速入门的场景中，我们一共管理了两台服务器。但是在实际场景中，我们要管理的服务器往往要多得多。难道依然要在Ansible 的 -i 参</description>
+    </item>
+    
+    <item>
+      <title>Ansible_1_ansible介绍及安装</title>
+      <link>https://jiaopanxin.github.io/post/ansible/ansible_1_ansible%E4%BB%8B%E7%BB%8D%E5%8F%8A%E5%AE%89%E8%A3%85/</link>
+      <pubDate>Wed, 25 Dec 2019 20:00:54 +0800</pubDate>
+      
+      <guid>https://jiaopanxin.github.io/post/ansible/ansible_1_ansible%E4%BB%8B%E7%BB%8D%E5%8F%8A%E5%AE%89%E8%A3%85/</guid>
+      <description>第 1 章 Ansible 介绍及安装 1.1 介绍 Ansible 是一个 IT 自动化工具。它能配置系统、部署软件、编排更复杂的 IT 任务，如连续部署或零停机时间滚动更新。Ansible 用 Python</description>
+    </item>
+    
+  </channel>
+</rss>

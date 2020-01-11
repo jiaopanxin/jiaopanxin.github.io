@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Ansible_3_ad_hoc以及模块 - Joken Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Joken" /><meta name="description" content="第 3 章 Ansible Ad-Hoc 3.1 命令格式 我们在快速入门中执行的Ansible 命令，类似于我们的批处理命令。在Ansible 中统称为Ansible Ad-Hoc。 其" /><meta name="keywords" content="Hugo, theme, even" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.62.0 with theme even" />
+
+
+<link rel="canonical" href="https://jiaopanxin.github.io/post/ansible/ansible_3_ad_hoc%E4%BB%A5%E5%8F%8A%E6%A8%A1%E5%9D%97/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link href="/lib/fancybox/jquery.fancybox-3.1.20.min.css" rel="stylesheet">
+
+
+<meta property="og:title" content="Ansible_3_ad_hoc以及模块" />
+<meta property="og:description" content="第 3 章 Ansible Ad-Hoc 3.1 命令格式 我们在快速入门中执行的Ansible 命令，类似于我们的批处理命令。在Ansible 中统称为Ansible Ad-Hoc。 其" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://jiaopanxin.github.io/post/ansible/ansible_3_ad_hoc%E4%BB%A5%E5%8F%8A%E6%A8%A1%E5%9D%97/" />
+<meta property="article:published_time" content="2019-12-25T20:10:28+08:00" />
+<meta property="article:modified_time" content="2019-12-25T20:10:28+08:00" />
+<meta itemprop="name" content="Ansible_3_ad_hoc以及模块">
+<meta itemprop="description" content="第 3 章 Ansible Ad-Hoc 3.1 命令格式 我们在快速入门中执行的Ansible 命令，类似于我们的批处理命令。在Ansible 中统称为Ansible Ad-Hoc。 其">
+<meta itemprop="datePublished" content="2019-12-25T20:10:28&#43;08:00" />
+<meta itemprop="dateModified" content="2019-12-25T20:10:28&#43;08:00" />
+<meta itemprop="wordCount" content="4575">
+
+
+
+<meta itemprop="keywords" content="ansible," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Ansible_3_ad_hoc以及模块"/>
+<meta name="twitter:description" content="第 3 章 Ansible Ad-Hoc 3.1 命令格式 我们在快速入门中执行的Ansible 命令，类似于我们的批处理命令。在Ansible 中统称为Ansible Ad-Hoc。 其"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Joken Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">首页</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">归档</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">分类</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">关于我</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Joken Blog</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">首页</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">归档</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">分类</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">标签</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">关于我</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Ansible_3_ad_hoc以及模块</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-12-25 20:10 </span>
+        <div class="post-category">
+            <a href="/categories/ansible/"> ansible </a>
+            </div>
+          <span class="more-meta"> 约 4575 字 </span>
+          <span class="more-meta"> 预计阅读 10 分钟 </span>
+        <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h4 id="-3--ansible-ad-hoc">第 3 章 Ansible Ad-Hoc</h4>
+<h5 id="31-">3.1 命令格式</h5>
+<blockquote>
+<p>我们在快速入门中执行的Ansible 命令，类似于我们的批处理命令。在Ansible 中统称为Ansible Ad-Hoc。
+其命令语法格式如下:</p>
+</blockquote>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">ansible pattern [-i inventory] -m module -a argument
+pattern, 资产选择器
+-i , 指定资产的位置
+-m , 指定本次Ansible ad-hoc 要执行的模块。可以类别成SHELL 中的命令。
+-a , 模块的参数. 可以类比成SHELL 中的命令参数
+
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>Example</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">// 快速入门的实例
+# ansible all -i 192.168.122.129,192.168.122.131 -m copy -a &#34;src=/tmp/a.conf dest=/tmp/a.conf&#34;
+
+</code></pre></td></tr></table>
+</div>
+</div><h5 id="32-">3.2 模块类型</h5>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">Ansible 模块分三种类型: 核心模块(core module)、附加模块(extra module)及用户自定义模块(consume module)。
+核心模块是由Ansible 的官方团队提供的。
+附加模块是由各个社区提供的。例如: OPENSTACK 社区、DOCKER 社区等等。
+当核心模块和附加模块都无法满足你的需求时，用户可以自定义模块。
+
+默认情况下，在安装Ansible 的时候， 核心模块和附加模块都已经安装而无需用户干预。
+
+</code></pre></td></tr></table>
+</div>
+</div><h5 id="33-">3.3 联机帮助</h5>
+<blockquote>
+<p>Ansible 的核心模块和附加模块，数量有1000+ 。这样庞大的模块数量，对于任何一个接触Ansible 的人都不可能将其完全记住、掌握使用。 因此能够顺利使用Ansible 的帮助文档，对我们来说是很有必要的。Ansible 的帮助文档，由
+它本身提供的命令 ansible-doc 实现。</p>
+</blockquote>
+<p><strong>常用帮助参数</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">// 列举出所有的核心模块和附加模块
+# ansible-doc -l
+// 查询某个模块的使用方法
+# ansible-doc modulename
+// 查询某个模块的使用方法，比较简洁的信息
+# ansible-doc -s modulename
+
+// Example
+# ansible-doc yum
+# ansible-doc -s yum
+
+</code></pre></td></tr></table>
+</div>
+</div><h5 id="34-">3.4 常用模块</h5>
+<p><strong>command &amp; shell 模块</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">两个模块都是在远程服务器上去执行命令。但command模块是ad-hoc的默认模块,在执行ad-hoc时,若不指定模块的名字则默认使用此模块.常用参数如下:
+command &amp; shell 
+- chdir       在运行命令之前，切换到此目录。
+- executable  更改用于执行命令的shell(bash，sh)，需要是可执行文件的绝对路径。
+
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>Example</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">// ad-hoc 默认在不指定 -m 参数的时候， 使用了默认的command 模块
+# ansible all -i inventory -a &#34;ls /root&#34;
+# ansible all -i inventory -m command -a &#34;ls /root&#34; //等同第一个命令
+# ansible all -i inventory -m shell -a &#34;ls /root&#34;
+
+</code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">两个模块功能类似的模块又存在的必要吗? 他们之间的差异在哪里?
+shell   模块可以执行SHELL 的内置命令
+command 模块无法执行SHELL 的内置命令
+如何检测那些命令是shell 的 内置命令呢?
+# type -a set        // set 为SHELL内置命令
+set is a shell builtin
+# type -a env        // env 非内置命令
+env is /bin/env
+env is /usr/bin/env
+
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>Example</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback"># ansible all -i localhost, -c local -a &#34;set&#34; 
+localhost | FAILED | rc=2 &gt;&gt;
+[Errno 2] 没有那个文件或目录
+// -c local 表示以本地的方式执行，不使用 SSH 连接的方式
+# ansible all -i localhost, -c local -m shell -a &#34;set&#34;
+localhost | SUCCESS | rc=0 &gt;&gt;
+BASH=/bin/sh
+BASHOPTS=cmdhist:extquote:force_fignore:hostcomplete:interactive_comments:progcomp:promptvars:sourcepath
+BASH_ALIASES=()
+BASH_ARGC=()
+BASH_ARGV=()
+BASH_CMDS=()
+BASH_EXECUTION_STRING=set
+BASH_LINENO=()
+BASH_SOURCE=()
+BASH_VERSINFO=([0]=&#34;4&#34; [1]=&#34;1&#34; [2]=&#34;2&#34; [3]=&#34;1&#34; [4]=&#34;release&#34; [5]=&#34;x86_64-redhat-linux-gnu&#34;)
+BASH_VERSION=&#39;4.1.2(1)-release&#39;
+DIRSTACK=()
+......
+......
+
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>script 模块</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">将管理节点上的脚本传递到远程服务器上进行执行，理论上此模块的执行完全不需要被管理服务器上有Python。
+
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>Example</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">// 管理节点上的一个脚本
+# cat /root/a.sh
+#/bin/bash
+touch /tmp/testfile
+
+</code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback"># ansible all -i inventory -m script -a &#34;/root/a.sh&#34;
+
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>copy 模块</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">copy 模块的主要用于管理节点和被管理节点之间的文件拷贝。经常使用到的参数如下:
+- src    指定拷贝文件的源地址
+- dest   指定拷贝文件的目标地址
+- backup 拷贝文件前，若原始文件发生变化，则对目标文件进行备份
+- woner  指定新拷贝文件的所有者
+- group  指定新拷贝文件的所有组
+- mode   指定新拷贝文件的权限
+
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>Example</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">// copy 管理节点上的/tmp/a.conf 到被管理节点上
+# ansible all -i inventory -m copy -a &#34;src=/tmp/a.conf dest=/tmp/a.conf&#34;
+// copy 前， 在被管理节点上对原文件进行备份
+# ansible all -i inventory -m copy -a &#34;src=/tmp/a.conf dest=/tmp/a.conf backup=yes&#34;
+// copy 文件的同时对文件进行用户及用户组设置
+# ansible all -i inventory -m copy -a &#34;src=/tmp/a.conf dest=/tmp/a.conf owner=nobody group=nobody&#34;
+// copy 文件的同时对文件进行权限设置
+# ansible all -i inventory -m copy -a &#34;src=/tmp/a.conf dest=/tmp/a.conf mode=0755&#34;
+
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>service 模块</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">管理远程节点上的服务。类似于Linux上的service命令。常用参数如下:
+– enabled  是否开机启动 yes|no 
+– name     必选项，服务名称 
+– runlevel 运行级别 
+– sleep    如果执行了restarted，在则stop和start之间沉睡几秒钟 
+– state    对当前服务执行启动，停止、重启、重新加载等操作(started,stopped,restarted,reloaded)
+
+注意:
+使用 service 模块时, enabled 和 state 参数至少要指定一个。
+使用 service 模块管理的服务，必须在系统中存在 /etc/init.d/XXX 对应的服务。
+比如若管理Nginx 服务，则应该存在 /etc/init.d/nginx
+
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>Example</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">// 启动 Nginx 服务
+# ansible all -i inventory -m service -a &#34;name=nginx state=started&#34;
+// 关闭 Nginx 服务
+# ansible all -i inventory -m service -a &#34;name=nginx state=stopped&#34;
+// 重启 Nginx 服务
+# ansible all -i inventory -m service -a &#34;name=nginx state=restarted&#34;
+// 重新加载 Nginx 服务
+# ansible all -i inventory -m service -a &#34;name=nginx state=reloaded&#34;
+// 加 Nginx 服务设置开机自启动
+# ansible all -i inventory -m service -a &#34;name=nginx enabled=yes&#34;
+
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>systemd 模块</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">管理远程节点上的 systemd 服务，就是由 systemd 所管理的服务。常用参数如下：
+- daemon_reload  重新载入 systemd，扫描新的或有变动的单元
+– enabled  是否开机启动 yes|no 
+– name     必选项，服务名称 
+– state    对当前服务执行启动，停止、重启、重新加载等操作(started,stopped,restarted,reloaded)
+
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>Example</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">// 重新加载 systemd
+# ansible all -i inventory -m systemd -a &#34;daemon_reload=yes&#34;
+// 启动 Mariadb 服务
+# ansible all -i inventory -m systemd -a &#34;name=mariadb state=started&#34;
+// 关闭 Mariadb 服务
+# ansible all -i inventory -m systemd -a &#34;name=mariadb state=stopped&#34;
+// 重启 Mariadb 服务
+# ansible all -i inventory -m systemd -a &#34;name=mariadb state=restarted&#34;
+// 重新加载 Mariadb 服务
+# ansible all -i inventory -m systemd -a &#34;name=mariadb state=reloaded&#34;
+// 将 Mariadb 服务设置开机自启动
+# ansible all -i inventory -m systemd -a &#34;name=mariadb enabled=yes&#34;
+
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>yum 模块</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">等同于 Linux 上的YUM 命令， 对远程服务器上RPM包进行管理。常用参数如下:
+- name    要安装的软件包名， 多个软件包以逗号(,) 隔开
+- state   对当前指定的软件安装、拆卸操作(present installed latest absent removed)
+          安装参数 present installed latest
+          拆卸参数 absent removed
+
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>Example</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">// 安装一个软件包
+# ansible all -i inventory -m yum -a &#34;name=nginx state=present&#34;
+# ansible all -i inventory -m yum -a &#34;name=nginx state=latest&#34;
+# ansible all -i inventory -m yum -a &#34;name=nginx state=installed&#34;
+// 拆卸一个软件包
+# ansible all -i inventory -m yum -a &#34;name=nginx state=absent&#34;
+# ansible all -i inventory -m yum -a &#34;name=nginx state=removed&#34;
+// 安装一个软件包组
+# ansible all -i inventory -m yum -a &#34;name=&#39;@Development tools&#39; state=present&#34;
+
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>group 模块</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">在被管理节点上，对组进行管理。 常用参数如下:
+- name     组名称， 必须的
+- system   是否为系统组, yes/no
+
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>Example</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">// 创建普通组 db_admin
+# ansible all -i 172.16.153.160, -m group -a &#34;name=db_admin&#34;
+
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>user 模块</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">用于在被管理节点上对用户进行管理。常用参数如下：
+- name  必须的参数， 指定用户名
+- password    设置用户的密码，这里接受的是一个加密的值，因为会直接存到 shadow
+- update_password  假如设置的密码不同于原密码，则会更新密码. 在 1.3 中被加入
+- home        指定用户的家目录
+- shell       设置用户的 shell
+- uid         指定用户的 UID
+- comment	  用户的描述信息
+- create_home 在创建用户时，是否创建其家目录。默认创建，假如不创建，设置为 no。2.5版本之前 
+              使用 createhome
+
+- group       设置用户的主组
+- groups      将用户加入到多个组中，多个用逗号隔开，也可以是个列表
+- system      设置为 yes 时，将会创建一个系统账号
+- expires     设置用户的过期时间，值为时间戳,会转为为天数后，放在 shadow 的最后一个字段里
+- generate_ssh_key	设置为 yes 将会为用户生成密钥，这不会覆盖原来的密钥
+- ssh_key_type 指定用户的密钥类型， 默认 rsa, 具体的类型取决于被管理节点
+
+- remove       当与 state=absent 一起使用，删除一个用户及其家目录，可选的值为: yes/no
+
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>Example</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">// 生成加密的密码
+# echo test |openssl passwd -1 -stdin
+// 创建一个用户 nginx, 指定其 shell 为 nologin
+# ansible all -i inventory -m user  -a &#34;name=nginx shell=/sbin/nologin&#34;
+// 创建用户 yangge, 并且为其创建密钥对，并且密钥类型为: ecdsa
+# ansible all -i inventory -m user -a &#34;name=yangge generate_ssh_key=yes ssh_key_type=ecdsa&#34;
+
+// 创建用 tom, 并且设置其有效期到 2019年8月16日, 加入到组 db_admin 中
+# timestamp=$(date +%s -d 20180725)
+// 或者
+# timestamp=$(python -c &#39;import time;print(time.mktime(time.strptime(&#34;2019-08-16&#34;, &#34;%Y-%m-%d&#34;)))&#39;)
+# ansible all -i 172.16.153.160, -m user -a &#34;name=tom expires=$timestamp&#34;
+
+// 修改已有用户 tom 在 31 天后过期
+# ansible all -i 172.16.153.160, -m user -a &#34;name=tom expires=$(echo $((86400 * 31))) groups=db_admin,&#34;
+
+</code></pre></td></tr></table>
+</div>
+</div><p>date 命令说明</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">// 计算 3 小时之后是几点几分
+# date +%T -d &#39;3 hours&#39;
+// 任意日期的前 N 天，后 N 天的具体日期
+# date +%F -d &#34;20190910 1 day&#34;
+# date +%F -d &#34;20190910 -1 day&#34;
+
+// 计算两个日期相差天数, 比如计算生日距离现在还有多少天
+# d1=$(date +%s -d 20180728)
+# d2=$(date +%s -d 20180726)
+# echo $(((d1-d2)/86400))
+
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>file 模块</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">file 模块主要用于远程主机上的文件操作，经常使用的模块参数如下: 
+- group  定义文件/目录的属组 
+- mode   定义文件/目录的权限 
+- owner  定义文件/目录的属主 
+- path   必选项，定义文件/目录的路径 
+- recurse  递归的设置文件的属性，只对目录有效 
+- src    要被链接(软/硬)的源文件的路径，只应用于state=link的情况 
+- dest   被链接到的路径，只应用于state=link的情况 
+- state 
+   directory  如果目录不存在，创建目录 
+   file       文件不存在，则不会被创建，存在则返回文件的信息，常用于检查文件是否存在。 
+   link       创建软链接 
+   hard       创建硬链接 
+   touch      如果文件不存在，则会创建一个新的文件，如果文件或目录已存在，则更新其最后修改时间 
+   absent     删除目录、文件或者取消链接文件
+
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>Example</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">// 创建一个文件
+# ansible all -i inventory -m file -a &#34;path=/tmp/foo.conf state=touch&#34;
+// 改变文件所有者及权限
+# ansible all -i inventory -m file -a &#34;path=/tmp/foo.conf owner=nobody group=nobody mode=0644&#34;
+// 创建一个软连接
+# ansible all -i inventory -m file -a &#34;src=/tmp/foo.conf dest=/tmp/link.conf state=link&#34;
+// 创建一个目录
+# ansible all -i inventory -m file -a &#34;path=/tmp/testdir state=directory&#34;
+// 取消一个连接
+# ansible all -i inventory -m file -a &#34;path=/tmp/link.conf state=absent&#34;
+// 删除一个文件
+# ansible all -i inventory -m file -a &#34;path=/tmp/foo.conf state=absent&#34;
+
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>cron 模块</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">管理远程节点的CRON 服务。等同于Linux 中的CRON。 常用命令如下:
+- name   指定一个cron job 的名字。一定要指定，便于日之后删除。
+- minute 指定分钟，可以设置成(0-59, *, */2 等)格式。 默认是 * , 也就是每分钟。
+- hour   指定小时，可以设置成(0-23, *, */2 等)格式。 默认是 * , 也就是每小时。
+- day    指定天，  可以设置成(1-31, *, */2 等)格式。 默认是 * , 也就是每天。
+- month  指定月份， 可以设置成(1-12, *, */2 等)格式。 默认是 * , 也就是每周。
+- weekday 指定星期， 可以设置成(0-6 for Sunday-Saturday, * 等)格式。默认是 *，也就是每星期。
+- job    指定要执行的内容，通常可以写个脚本，或者一段内容。
+- state  指定这个job的状态，可以是新增(present)或者是删除(absent)。 默认为新增(present)
+
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>Example</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">// 新建一个 CRON JOB 任务
+# ansible all -i inventory -m cron -a &#34;name=&#39;create new job&#39; minute=&#39;0&#39; job=&#39;ls -alh &gt; /dev/null&#39;&#34;
+// 删除一个 CRON JOB 任务，删除时，一定要正确指定job 的name参数，以免误删除。
+# ansible all -i inventory -m cron -a &#34;name=&#39;create new job&#39; state=absent&#34; 
+
+</code></pre></td></tr></table>
+</div>
+</div><p>登录任何一台管理机验证cron</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback"># crontab -l
+#Ansible: create new job
+0 * * * * ls -alh &gt; /dev/null
+
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>debug模块</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">debug 模块主要用于PlayBook调试时使用，通常的作用是将一个变量的结果打印出来。常用参数如下:
+- var 直接打印一个指定的变量值
+- msg 打印一段可以格式化的字符串
+
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>Example</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">// 这里引入了变量，我们只需了解 debug 模板的使用即可。在学习变量、剧本时，我们会对它有更深刻的理解。
+# ansible all -i inventory -m debug -a &#34;var=role&#34; -e &#34;role=web&#34;
+# ansible all -i inventory -m debug -a &#34;msg=&#39;role is {{role}} &#39;&#34; -e &#34;role=web&#34;
+
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>template</strong> 模块</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">template 模块使用了Jinjia2格式作为文件模版，可以进行文档内变量的替换。
+         它的每次使用都会被ansible标记为”changed”状态。文件以 .j2 结尾
+         模块常用参数如下：
+- backup 创建一个包含时间戳信息的备份文件，这样如果您以某种方式错误地破坏了原始文件，
+         就可以将其恢复原状。yes/no
+- force  默认值是yes，当内容与源不同时，它将替换远程文件。如果no，仅在目标不存在时才传输文件。
+- src    指定 Ansible 控制端的 文件路径
+- dest   指定 Ansible 被控端的 文件路径
+- owner  指定文件的属主
+- group  指定文件的属组
+- mode   指定文件的权限
+
+- newline_sequence 指定新文件的换行符; \n，\r, 或 \r\n
+
+内置变量
+ansible_managed - 包含一个字符串，可用于描述模板名称，主机，模板文件的修改时间和所有者的uid
+template_host - 包含模板机器的节点名称
+template_uid - 所有者的uid
+template_path - 模版路径
+template_fullpath - 模版的绝对路径
+template_run_date - 模版呈现的时间
+
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>Example</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">// 把本地的当前目录下的 jinja2 模板文件 foo.j2 传送到目标机器上，并指定属主为 shark, 属组 为 wheel, 权限为 0644
+# ansible all -i 172.16.153.160, -m template -a &#34;src=./foo.j2 dest=/tmp/foo.conf owner=shark group=wheel mode=0644&#34;
+
+</code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">// 上面的用法其实和 copy 模块一样，下面我们就来介绍 template 模块的强大之处
+1\. 建立一个 template 文件, 名为 hello_world.j2
+# cat hello_world.j2
+Hello {{var}} !
+
+2\. 执行命令，并且设置变量 var 的值为 world
+# ansible all -i 172.16.153.160, -m template -a &#34;src=hello_world.j2 dest=/tmp/hello_world.world&#34; -e &#34;var=world&#34;
+
+3\. 在被控主机上验证
+# cat /tmp/hello_world.world
+Hello world !
+
+</code></pre></td></tr></table>
+</div>
+</div><p>所有模块列表 <a href="https://docs.ansible.com/ansible/latest/modules/list_of_all_modules.html">https://docs.ansible.com/ansible/latest/modules/list_of_all_modules.html</a></p>
+<p>模块按照首字母排序</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Joken</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-12-25 20:10
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/ansible/">ansible</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/ansible/ansible_4_playbook%E5%89%A7%E6%9C%AC/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Ansible_4_playbook剧本</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/ansible/ansible_2_ansible%E8%B5%84%E4%BA%A7/">
+            <span class="next-text nav-default">Ansible_2_ansible资产</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:your@email.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://localhost:1313" class="iconfont icon-google" title="google"></a>
+      <a href="https://github.com/jiaopanxin/jiaopanxin.github.io" class="iconfont icon-github" title="github"></a>
+      <a href="http://localhost:1313" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="http://localhost:1313" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="http://localhost:1313" class="iconfont icon-douban" title="douban"></a>
+      <a href="http://localhost:1313" class="iconfont icon-pocket" title="pocket"></a>
+      <a href="http://localhost:1313" class="iconfont icon-tumblr" title="tumblr"></a>
+      <a href="http://localhost:1313" class="iconfont icon-instagram" title="instagram"></a>
+      <a href="http://localhost:1313" class="iconfont icon-gitlab" title="gitlab"></a>
+      <a href="http://localhost:1313" class="iconfont icon-bilibili" title="bilibili"></a>
+  <a href="https://jiaopanxin.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  <div class="busuanzi-footer">
+    <span id="busuanzi_container_site_pv"> 本站总访问量 <span id="busuanzi_value_site_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次 </span>
+      <span class="division">|</span>
+    <span id="busuanzi_container_site_uv"> 本站总访客数 <span id="busuanzi_value_site_uv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 人 </span>
+  </div>
+
+  <span class="copyright-year">
+    &copy; 
+    2019 - 
+    2020
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Joken</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  <script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  <script type="text/javascript" src="/lib/fancybox/jquery.fancybox-3.1.20.min.js"></script>
+    <script type="text/javascript" src="/lib/timeago/timeago-3.0.2.min.js"></script>
+    <script type="text/javascript" src="/lib/timeago/timeago.locales-3.0.2.min.js"></script>
+  <script><!-- NOTE: timeago.js uses the language code format like "zh_CN" (underscore and case sensitive) -->
+    var languageCode = "zh-CN".replace(/-/g, '_').replace(/_(.*)/, function ($0, $1) {return $0.replace($1, $1.toUpperCase());});
+    timeago().render(document.querySelectorAll('.timeago'), languageCode);
+    timeago.cancel();  
+  </script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

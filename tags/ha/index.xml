@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>HA on Joken Blog</title>
+    <link>https://jiaopanxin.github.io/tags/ha/</link>
+    <description>Recent content in HA on Joken Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Wed, 25 Dec 2019 17:24:28 +0800</lastBuildDate>
+    
+	<atom:link href="https://jiaopanxin.github.io/tags/ha/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Keepalived_1_概念及应用</title>
+      <link>https://jiaopanxin.github.io/post/ha/keepalived_1_%E6%A6%82%E5%BF%B5%E5%8F%8A%E5%BA%94%E7%94%A8/</link>
+      <pubDate>Wed, 25 Dec 2019 17:24:28 +0800</pubDate>
+      
+      <guid>https://jiaopanxin.github.io/post/ha/keepalived_1_%E6%A6%82%E5%BF%B5%E5%8F%8A%E5%BA%94%E7%94%A8/</guid>
+      <description>介绍 Keepalived的作用是检测服务器状态 如果一台服务器宕机或者出现其他故障导致当前服务器不可用，keepalived就会检测到并将故障</description>
+    </item>
+    
+  </channel>
+</rss>

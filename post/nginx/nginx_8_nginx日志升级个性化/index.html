@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Nginx_8_nginx日志升级个性化 - Joken Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Joken" /><meta name="description" content="第八章 Nginx 日志、升级及个性化配置 日志问题 1 2 Nginx 本身有一套友好的记录访问日志功能。但默认的日志格式依然不是很理想，需要运维人员根据自己的运维习惯" /><meta name="keywords" content="Hugo, theme, even" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.62.0 with theme even" />
+
+
+<link rel="canonical" href="https://jiaopanxin.github.io/post/nginx/nginx_8_nginx%E6%97%A5%E5%BF%97%E5%8D%87%E7%BA%A7%E4%B8%AA%E6%80%A7%E5%8C%96/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link href="/lib/fancybox/jquery.fancybox-3.1.20.min.css" rel="stylesheet">
+
+
+<meta property="og:title" content="Nginx_8_nginx日志升级个性化" />
+<meta property="og:description" content="第八章 Nginx 日志、升级及个性化配置 日志问题 1 2 Nginx 本身有一套友好的记录访问日志功能。但默认的日志格式依然不是很理想，需要运维人员根据自己的运维习惯" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://jiaopanxin.github.io/post/nginx/nginx_8_nginx%E6%97%A5%E5%BF%97%E5%8D%87%E7%BA%A7%E4%B8%AA%E6%80%A7%E5%8C%96/" />
+<meta property="article:published_time" content="2019-12-26T16:24:42+08:00" />
+<meta property="article:modified_time" content="2019-12-26T16:24:42+08:00" />
+<meta itemprop="name" content="Nginx_8_nginx日志升级个性化">
+<meta itemprop="description" content="第八章 Nginx 日志、升级及个性化配置 日志问题 1 2 Nginx 本身有一套友好的记录访问日志功能。但默认的日志格式依然不是很理想，需要运维人员根据自己的运维习惯">
+<meta itemprop="datePublished" content="2019-12-26T16:24:42&#43;08:00" />
+<meta itemprop="dateModified" content="2019-12-26T16:24:42&#43;08:00" />
+<meta itemprop="wordCount" content="2152">
+
+
+
+<meta itemprop="keywords" content="nginx," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Nginx_8_nginx日志升级个性化"/>
+<meta name="twitter:description" content="第八章 Nginx 日志、升级及个性化配置 日志问题 1 2 Nginx 本身有一套友好的记录访问日志功能。但默认的日志格式依然不是很理想，需要运维人员根据自己的运维习惯"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Joken Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">首页</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">归档</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">分类</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">关于我</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Joken Blog</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">首页</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">归档</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">分类</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">标签</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">关于我</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Nginx_8_nginx日志升级个性化</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-12-26 16:24 </span>
+        <div class="post-category">
+            <a href="/categories/nginx/"> nginx </a>
+            </div>
+          <span class="more-meta"> 约 2152 字 </span>
+          <span class="more-meta"> 预计阅读 5 分钟 </span>
+        <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h4 id="-nginx-">第八章 Nginx 日志、升级及个性化配置</h4>
+<h5 id="heading">日志问题</h5>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">Nginx 本身有一套友好的记录访问日志功能。但默认的日志格式依然不是很理想，需要运维人员根据自己的运维习惯，或者根据数据分析部门的要求对日志格式进行定义。
+
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>如何定义日志格式</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback"># Nginx 的ngx_http_log_module 模块中log_format 指令，可以帮我们去完成自定义日志的格式。
+log_format  main  &#39;$http_x_real_ip $http_host [$time_local] &#34;$request&#34; $request_length &#39;
+                  &#39;$status $body_bytes_sent $request_time &#34;$http_referer&#34; &#39;
+                  &#39;&#34;$http_user_agent&#34; $remote_addr &#39;;
+
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>每个字段的具体含义</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">$http_x_real_ip 记录客户端IP地址,通常使用$remote_addr, 这里结合负载均衡的配置获取真是的客户端IP
+$http_host  请求的域名
+$time_local 通用日志格式下的本地时间。
+$request 记录请求的URL和HTTP协议版本,及请求方式。 格式为&#34;METHOD URL VERSION&#34;
+$request_length 请求的长度（包括请求行，请求头和请求正文）。
+$status 记录请求状态，HTTP状态码。
+$body_bytes_sent 发送给客户端的响应体大小，不包括响应头。
+$http_referer    记录从哪个页面链接访问过来的
+$http_user_agent 记录客户端浏览器相关信息
+$remote_addr  远端服务器，到底是哪台代理服务器来的请求。
+
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>如何使用自定义日志格式</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback"># 通过使用access_log 指令去指定访问日志时，指定使用的日志格式
+access_log /var/log/access.log main;
+
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>日志切割问题</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">若记录了Nginx 的access Log，最好能够按天对日志进行切割、压缩。这样做的好处有:
+- 日志归档清晰
+- 大量的日志也不会导致磁盘空间占满
+- 若当天业务有问题，查询日志时不必从历史日志出发
+
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>Nginx 切割日志实例</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># 脚本功能</span>
+<span class="c1"># 定期删除30天一天的归档日志。</span>
+<span class="c1"># 可以通过crontab 在每天凌晨后执行， 执行后会将前一天的日志归档到 $LOGARCHIVE 变量指定的目录中</span>
+<span class="c1"># 可以留作业， 让学生改进成，每天归档后对日志进行压缩。以减少日志对磁盘的使用情况。</span>
+<span class="c1"># 日志被 mv 走后， 对 Nginx 发送了 -USR1 信号， 重新打开日志文件。 这个在第一章中有介绍</span> 
+<span class="c1">#!/bin/bash</span>
+
+<span class="nv">LOGDIR</span><span class="o">=</span><span class="s2">&#34;/data0/www/logs&#34;</span>
+<span class="nv">LOGSUFFIXA</span><span class="o">=</span><span class="s2">&#34;*-access_log&#34;</span>
+<span class="nv">LOGARCHIVE</span><span class="o">=</span><span class="s2">&#34;/data0/www/logs/archives&#34;</span>
+Pfind <span class="nv">$LOGARCHIVE</span> -type f -atime +30 -exec rm -f <span class="o">{</span><span class="o">}</span> <span class="se">\;</span> &gt; /dev/null 2&gt;<span class="p">&amp;</span><span class="m">1</span>
+find <span class="nv">$LOGARCHIVE</span> -type d -empty -exec rmdir <span class="o">{</span><span class="o">}</span> <span class="se">\;</span> &gt;/dev/null 2&gt;<span class="p">&amp;</span><span class="m">1</span>
+
+<span class="nv">DATA</span><span class="o">=</span><span class="sb">`</span>date --date<span class="o">=</span><span class="s2">&#34;LAST DAY&#34;</span> <span class="s2">&#34;+%y%m%d&#34;</span><span class="sb">`</span>
+<span class="nv">LOGARCHIVE</span><span class="o">=</span><span class="s2">&#34;</span><span class="nv">$LOGARCHIVE</span><span class="s2">/</span><span class="nv">$DATE</span><span class="s2">&#34;</span>
+
+<span class="nb">cd</span> <span class="nv">$LOGDIR</span>
+<span class="k">for</span> FILE in *<span class="nv">$LOGSUFFIXA</span>*<span class="p">;</span> <span class="k">do</span>
+	mv <span class="nv">$FILE</span> <span class="nv">$LOGDIR</span>/<span class="nv">$LOGARCHIVE</span>
+<span class="k">done</span>
+<span class="c1"># 发送 USR1 信号给Nginx， 让Nginx 重新打开日志文件。</span>
+<span class="nb">kill</span> -USR1 <span class="sb">`</span>cat <span class="si">${</span><span class="nv">PID</span><span class="si">}</span><span class="sb">`</span>
+
+</code></pre></td></tr></table>
+</div>
+</div><h5 id="heading-1">升级问题</h5>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">当我们使用的Nginx 版本存在BUG，亦或希望使用更高级的功能时。就有可能需要对我们目前使用的Nginx 版本进行升级。那如何升级呢? 我们这里分为理想情况的升级，和实际工作中的升级去分析。
+
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>理想情况的升级</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">有可能你真的没有什么运维经验，将实际情况想象的过于复杂。网上看到的一切有关平滑升级的情况没有问题，但基本上都是针对单点Nginx 去做的升级。而实际运维工作中，我们不可能让单点Nginx服务存在。如果逼不得已真的存在，请按照下面的升级方案升级吧。
+
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>具体升级步骤</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback"># 检查当前Nginx 版本
+[root@mouse01 ~]# /usr/local/nginx/sbin/nginx -V
+# 确保当前版本的nginx 是存活的
+[root@mouse01 ~]# ps -ef |grep nginx
+# 编译安装高版本Nginx
+[root@mouse01 ~]# wget http://nginx.org/download/nginx-1.9.9.tar.gz
+[root@mouse01 ~]# tar xf nginx-1.9.6.tar.gz
+[root@mouse01 ~]# cd nginx-1.9.6
+[root@mouse01 nginx-1.9.6]# ./configure --prefix=/usr/local/nginx/ 
+[root@mouse01 nginx-1.9.6]# make
+# 备份旧的nginx，一方面是等一下需要把新的nginx复制过来，另一方面的如果新的nginx有问题还可以进行恢复
+[root@mouse01 mv /usr/local/nginx/sbin/nginx{,.bak}
+#把编译好的新的nginx文件服务到指定的安装目录中
+[root@mouse01 nginx-1.9.6]# cp objs/nginx /usr/local/nginx/sbin/
+# 检查高版本Nginx 对原有配置文件是否兼容
+[root@mouse01 sbin]# /usr/local/nginx/sbin/nginx -t
+#使用新版本的Nginx文件启动服务，之后平缓停止原有Nginx进程
+[root@mouse01 nginx-1.9.6]# kill -USR2 `cat /nginx/logs/nginx.pid`
+# 可以看到这里自动把之前的nginx.pid命名为nginx.pid.oldbin，并为新的nginx生成nginx.pid
+[root@mouse01 nginx-1.9.6]# cd /nginx/logs/
+nginx.pid  nginx.pid.oldbin
+#平缓停止旧服务的worker process
+[root@mouse01 logs]# kill -WINCH `cat /nginx/logs/nginx.pid.oldbin`
+# 检查是否升级成功
+[root@mouse01 logs]# /usr/local/nginx/sbin/nginx -V
+# 检查Nginx 进程是否存在
+[root@mouse01 logs]# ps -aux |grep nginx
+
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>实际工作中的升级</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">在实际工作中，Nginx 服务不可能单点部署。我们往往面临的是一个Nginx 服务集群。再按照理想的情况进行升级，就有些得不偿失了。 那如何操作才能保证整个Nginx服务集群都升级OK呢?
+可想而知，服务器集群的前端必有反向代理，反向代理对整个服务器集群是有健康检查的。如果健康检查发现了某台服务器已经DOWN机，就会将机器从反向代理中摘除。这样就不会有生产环境的流量引入。当健康检查检测到服务器UP后，会再将这台服务器添加到反向代理上，这之后生产流量才会引入。
+因此在实际工作场景中，我们只需要关闭Nginx 服务、升级Nginx 软件包、启动Nginx服务即可。
+
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>具体升级步骤</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">1) 关闭Nginx 服务 /usr/local/nginx/sbin/nginx -s stop 或者 kill QUIT PID
+2）升级Nginx 二进制文件
+3) 启动Nginx 服务 /usr/local/nginx/sbin/nginx
+# 注意，请将Nginx 的路径替换成真是的路径
+
+</code></pre></td></tr></table>
+</div>
+</div><h5 id="heading-2">错误页个性化配置</h5>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">当一个HTTP请求返回的状态码是404 、500、502 、504 等等错误的情况下，若没有做特殊配置，Nginx返回的是本身的默认错误页面。这样默认的错误页，对大众体验有可能是一个严重的耻辱。如果我们能够针对这些状态码制定不同的友好提示页面那效果就理想多了。那如何配置这样的友好提示页面呢?
+
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>配置友好提示页面(反向代理上配置)</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">server {
+    listen 80;
+    server_name www.blog.qfedu.com;
+    root /data0/www/htdocs/www.blog.qfedu.com;
+    access_log /data0/www/logs/www.blog.qfedu.com-access_log main;
+    error_log  /data0/www/logs/www.blog.qfedu.com-error_log;
+
+    # 当HTTP 返回 500 502 503 504 时，按照要求返回error_5xx.html 页面
+    # 主要前提我们需要有一个 error_5xx.html 的页面存放在root指令 指定的目录的 static 这个子目录下
+    # 开启 proxy_intercept_errors 为on, 默认值为 off, 此时即使配置了友好提示页也不会生效。
+    proxy_intercept_errors  on;
+    error_page 500 502 503 504 /static/error_5xx.html;
+
+    location /static/error {
+        internal;
+        access_log /data0/www/logs/all_bad_qfedu-access_log main;
+    }
+
+    location / {
+        proxy_http_version 1.1;
+        proxy_set_header Connection &#34;&#34;;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr
+        proxy_pass http://example_servers;
+    }
+}
+
+</code></pre></td></tr></table>
+</div>
+</div>
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Joken</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-12-26 16:24
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/nginx/">nginx</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/nginx/nginx_9_nginx%E5%AE%89%E5%85%A8%E5%8F%8A%E6%B5%81%E9%87%8F%E6%8E%A7%E5%88%B6/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Nginx_9_nginx安全及流量控制</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/nginx/nginx_7_location%E7%A5%A5%E8%A7%A3/">
+            <span class="next-text nav-default">Nginx_7_location祥解</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:your@email.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://localhost:1313" class="iconfont icon-google" title="google"></a>
+      <a href="https://github.com/jiaopanxin/jiaopanxin.github.io" class="iconfont icon-github" title="github"></a>
+      <a href="http://localhost:1313" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="http://localhost:1313" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="http://localhost:1313" class="iconfont icon-douban" title="douban"></a>
+      <a href="http://localhost:1313" class="iconfont icon-pocket" title="pocket"></a>
+      <a href="http://localhost:1313" class="iconfont icon-tumblr" title="tumblr"></a>
+      <a href="http://localhost:1313" class="iconfont icon-instagram" title="instagram"></a>
+      <a href="http://localhost:1313" class="iconfont icon-gitlab" title="gitlab"></a>
+      <a href="http://localhost:1313" class="iconfont icon-bilibili" title="bilibili"></a>
+  <a href="https://jiaopanxin.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  <div class="busuanzi-footer">
+    <span id="busuanzi_container_site_pv"> 本站总访问量 <span id="busuanzi_value_site_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次 </span>
+      <span class="division">|</span>
+    <span id="busuanzi_container_site_uv"> 本站总访客数 <span id="busuanzi_value_site_uv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 人 </span>
+  </div>
+
+  <span class="copyright-year">
+    &copy; 
+    2019 - 
+    2020
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Joken</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  <script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  <script type="text/javascript" src="/lib/fancybox/jquery.fancybox-3.1.20.min.js"></script>
+    <script type="text/javascript" src="/lib/timeago/timeago-3.0.2.min.js"></script>
+    <script type="text/javascript" src="/lib/timeago/timeago.locales-3.0.2.min.js"></script>
+  <script><!-- NOTE: timeago.js uses the language code format like "zh_CN" (underscore and case sensitive) -->
+    var languageCode = "zh-CN".replace(/-/g, '_').replace(/_(.*)/, function ($0, $1) {return $0.replace($1, $1.toUpperCase());});
+    timeago().render(document.querySelectorAll('.timeago'), languageCode);
+    timeago.cancel();  
+  </script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

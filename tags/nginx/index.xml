@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>nginx on Joken Blog</title>
+    <link>https://jiaopanxin.github.io/tags/nginx/</link>
+    <description>Recent content in nginx on Joken Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Sat, 28 Dec 2019 09:27:26 +0800</lastBuildDate>
+    
+	<atom:link href="https://jiaopanxin.github.io/tags/nginx/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Nginx_13_nginx高并发下的优化</title>
+      <link>https://jiaopanxin.github.io/post/nginx/nginx_13_nginx%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B8%8B%E7%9A%84%E4%BC%98%E5%8C%96/</link>
+      <pubDate>Sat, 28 Dec 2019 09:27:26 +0800</pubDate>
+      
+      <guid>https://jiaopanxin.github.io/post/nginx/nginx_13_nginx%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B8%8B%E7%9A%84%E4%BC%98%E5%8C%96/</guid>
+      <description>写在前面 最近在进行服务器的优化，正好在看nginx相关的知识，所以把一些知识整理一下。参考资料为《Nginx高性能web服务器详解》，建议大</description>
+    </item>
+    
+    <item>
+      <title>Nginx_12_nginx平滑升级</title>
+      <link>https://jiaopanxin.github.io/post/nginx/nginx_12_nginx%E5%B9%B3%E6%BB%91%E5%8D%87%E7%BA%A7/</link>
+      <pubDate>Thu, 26 Dec 2019 16:28:12 +0800</pubDate>
+      
+      <guid>https://jiaopanxin.github.io/post/nginx/nginx_12_nginx%E5%B9%B3%E6%BB%91%E5%8D%87%E7%BA%A7/</guid>
+      <description>Nginx平滑升级 查看当前 Nginx 编译参数 1 2 3 4 5 6 # /usr/local/nginx/sbin/nginx -V nginx version: nginx/1.15.8 built by gcc 4.8.5 20150623 (Red Hat 4.8.5-5) (GCC) built with OpenSSL 1.1.1a 20 Nov 2018 TLS SNI support enabled configure arguments: --user=www --group=www --prefix=/usr/local/nginx 升级nginx 下载新版Ngin</description>
+    </item>
+    
+    <item>
+      <title>Nginx_11_nginx监控</title>
+      <link>https://jiaopanxin.github.io/post/nginx/nginx_11_nginx%E7%9B%91%E6%8E%A7/</link>
+      <pubDate>Thu, 26 Dec 2019 16:27:19 +0800</pubDate>
+      
+      <guid>https://jiaopanxin.github.io/post/nginx/nginx_11_nginx%E7%9B%91%E6%8E%A7/</guid>
+      <description>第十一章 Nginx 监控 1 2 3 一个服务健康与否，与运维人员息息相关。当一个服务出现问题时，运维人员如何在第一时间感知并恢复业务呢？ 此时相应的监控、告警</description>
+    </item>
+    
+    <item>
+      <title>Nginx_10_nginx中的已定义变量</title>
+      <link>https://jiaopanxin.github.io/post/nginx/nginx_10_nginx%E4%B8%AD%E7%9A%84%E5%B7%B2%E5%AE%9A%E4%B9%89%E5%8F%98%E9%87%8F/</link>
+      <pubDate>Thu, 26 Dec 2019 16:26:42 +0800</pubDate>
+      
+      <guid>https://jiaopanxin.github.io/post/nginx/nginx_10_nginx%E4%B8%AD%E7%9A%84%E5%B7%B2%E5%AE%9A%E4%B9%89%E5%8F%98%E9%87%8F/</guid>
+      <description>第十章 Nginx 中的已定义变量 有哪些已定义的变量 1 2 3 4 Nginx 本身提供了很多变量，这些变量可供我们在日志记录、rewrite规则编写、及更高级的LUA脚</description>
+    </item>
+    
+    <item>
+      <title>Nginx_9_nginx安全及流量控制</title>
+      <link>https://jiaopanxin.github.io/post/nginx/nginx_9_nginx%E5%AE%89%E5%85%A8%E5%8F%8A%E6%B5%81%E9%87%8F%E6%8E%A7%E5%88%B6/</link>
+      <pubDate>Thu, 26 Dec 2019 16:25:30 +0800</pubDate>
+      
+      <guid>https://jiaopanxin.github.io/post/nginx/nginx_9_nginx%E5%AE%89%E5%85%A8%E5%8F%8A%E6%B5%81%E9%87%8F%E6%8E%A7%E5%88%B6/</guid>
+      <description>第九章 Nginx 的安全及流量控制 HTTPS 协议 1 2 HTTPS 协议，我个人理解其实就是 HTTP 协议 + SSL/TLS 协议。为解决HTTP 协议安全上的易窃听、篡改、冒充 等风险而设计，其核心</description>
+    </item>
+    
+    <item>
+      <title>Nginx_8_nginx日志升级个性化</title>
+      <link>https://jiaopanxin.github.io/post/nginx/nginx_8_nginx%E6%97%A5%E5%BF%97%E5%8D%87%E7%BA%A7%E4%B8%AA%E6%80%A7%E5%8C%96/</link>
+      <pubDate>Thu, 26 Dec 2019 16:24:42 +0800</pubDate>
+      
+      <guid>https://jiaopanxin.github.io/post/nginx/nginx_8_nginx%E6%97%A5%E5%BF%97%E5%8D%87%E7%BA%A7%E4%B8%AA%E6%80%A7%E5%8C%96/</guid>
+      <description>第八章 Nginx 日志、升级及个性化配置 日志问题 1 2 Nginx 本身有一套友好的记录访问日志功能。但默认的日志格式依然不是很理想，需要运维人员根据自己的运维习惯</description>
+    </item>
+    
+    <item>
+      <title>Nginx_7_location祥解</title>
+      <link>https://jiaopanxin.github.io/post/nginx/nginx_7_location%E7%A5%A5%E8%A7%A3/</link>
+      <pubDate>Thu, 26 Dec 2019 16:24:02 +0800</pubDate>
+      
+      <guid>https://jiaopanxin.github.io/post/nginx/nginx_7_location%E7%A5%A5%E8%A7%A3/</guid>
+      <description>第七章 Nginx Location 详解 location 指令 1 2 3 4 5 6 7 8 9 location 指令可用在虚拟主机server 中， 意味着提供来自客户端的URI或者内部重定向的访问。语法如下: location [modifier] uri</description>
+    </item>
+    
+    <item>
+      <title>Nginx_6_rewrite指令</title>
+      <link>https://jiaopanxin.github.io/post/nginx/nginx_6_rewrite%E6%8C%87%E4%BB%A4/</link>
+      <pubDate>Thu, 26 Dec 2019 16:23:04 +0800</pubDate>
+      
+      <guid>https://jiaopanxin.github.io/post/nginx/nginx_6_rewrite%E6%8C%87%E4%BB%A4/</guid>
+      <description>第六章 Nginx rewrite指令集详解 1 2 3 Rewrite 是Nginx提供的一个重要基本功能，其在Web服务器产品中几乎是必备的功能，用于实现URL的重写。 U</description>
+    </item>
+    
+    <item>
+      <title>Nginx_5_nginx动静分离</title>
+      <link>https://jiaopanxin.github.io/post/nginx/nginx_5_nginx%E5%8A%A8%E9%9D%99%E5%88%86%E7%A6%BB/</link>
+      <pubDate>Thu, 26 Dec 2019 16:21:56 +0800</pubDate>
+      
+      <guid>https://jiaopanxin.github.io/post/nginx/nginx_5_nginx%E5%8A%A8%E9%9D%99%E5%88%86%E7%A6%BB/</guid>
+      <description>第五章 Nginx 静态资源及动静分离 静态资源缓存 1 2 静态资源缓存问题，这里我们分别从客户端缓存及服务器端缓存两个场景去分析。 1、客户端静态资源缓存 1 2</description>
+    </item>
+    
+    <item>
+      <title>Nginx_4_反向代理及负载均衡</title>
+      <link>https://jiaopanxin.github.io/post/nginx/nginx_4_%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E5%8F%8A%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/</link>
+      <pubDate>Thu, 26 Dec 2019 16:20:56 +0800</pubDate>
+      
+      <guid>https://jiaopanxin.github.io/post/nginx/nginx_4_%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E5%8F%8A%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/</guid>
+      <description>第四章 Nginx 反向代理及负载均衡 1 2 代理（Proxy）也称网络代理。它是一种特殊的网络服务，允许一个网络终端（一般为客户端）通过这个服务与另一个网</description>
+    </item>
+    
+    <item>
+      <title>Nginx_3_nginx虚拟主机</title>
+      <link>https://jiaopanxin.github.io/post/nginx/nginx_3_nginx%E8%99%9A%E6%8B%9F%E4%B8%BB%E6%9C%BA/</link>
+      <pubDate>Thu, 26 Dec 2019 16:18:46 +0800</pubDate>
+      
+      <guid>https://jiaopanxin.github.io/post/nginx/nginx_3_nginx%E8%99%9A%E6%8B%9F%E4%B8%BB%E6%9C%BA/</guid>
+      <description>第三章 Nginx 虚拟主机 虚拟主机定义 1 2 虚拟主机指的是在单一机器上运行多个网站（例如 company1.qfedu.com 和 company2.qfedu.com）。虚拟主机可以是&amp;#3</description>
+    </item>
+    
+    <item>
+      <title>Nginx_2_nginx配置</title>
+      <link>https://jiaopanxin.github.io/post/nginx/nginx_2_nginx%E9%85%8D%E7%BD%AE/</link>
+      <pubDate>Thu, 26 Dec 2019 16:17:45 +0800</pubDate>
+      
+      <guid>https://jiaopanxin.github.io/post/nginx/nginx_2_nginx%E9%85%8D%E7%BD%AE/</guid>
+      <description>第二章 Nginx 配置 配置文件结构 我们从一份简单的Nginx 配置入手，去了解Nginx 配置文件的结构 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25</description>
+    </item>
+    
+    <item>
+      <title>Nginx_1_nginx初探</title>
+      <link>https://jiaopanxin.github.io/post/nginx/nginx_1_nginx%E5%88%9D%E6%8E%A2/</link>
+      <pubDate>Thu, 26 Dec 2019 16:17:15 +0800</pubDate>
+      
+      <guid>https://jiaopanxin.github.io/post/nginx/nginx_1_nginx%E5%88%9D%E6%8E%A2/</guid>
+      <description>第一章 Nginx 初探 特性介绍 Nginx 提供基本HTTP服务，可以作为HTTP 代理服务器和反向代理服务器，支持通过缓存加速访问，可以完成简单的负载均衡和容错，</description>
+    </item>
+    
+  </channel>
+</rss>

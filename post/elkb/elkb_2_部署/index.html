@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>ELKB_2_部署 - Joken Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Joken" /><meta name="description" content="环境要求 注明 ES代表：elasticsearch Centos7 java 1.8 nginx 软件包及版本 | IP | hostname | 软件 | 内存要求 | | &amp;mdash; | &amp;mdash; | &amp;mdash; | &amp;mdash; | | 172.16.249.101 | elk-1 | filebeat、" /><meta name="keywords" content="Hugo, theme, even" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.62.0 with theme even" />
+
+
+<link rel="canonical" href="https://jiaopanxin.github.io/post/elkb/elkb_2_%E9%83%A8%E7%BD%B2/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link href="/lib/fancybox/jquery.fancybox-3.1.20.min.css" rel="stylesheet">
+
+
+<meta property="og:title" content="ELKB_2_部署" />
+<meta property="og:description" content="环境要求 注明 ES代表：elasticsearch Centos7 java 1.8 nginx 软件包及版本 | IP | hostname | 软件 | 内存要求 | | &mdash; | &mdash; | &mdash; | &mdash; | | 172.16.249.101 | elk-1 | filebeat、" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://jiaopanxin.github.io/post/elkb/elkb_2_%E9%83%A8%E7%BD%B2/" />
+<meta property="article:published_time" content="2019-12-26T12:09:50+08:00" />
+<meta property="article:modified_time" content="2019-12-26T12:09:50+08:00" />
+<meta itemprop="name" content="ELKB_2_部署">
+<meta itemprop="description" content="环境要求 注明 ES代表：elasticsearch Centos7 java 1.8 nginx 软件包及版本 | IP | hostname | 软件 | 内存要求 | | &mdash; | &mdash; | &mdash; | &mdash; | | 172.16.249.101 | elk-1 | filebeat、">
+<meta itemprop="datePublished" content="2019-12-26T12:09:50&#43;08:00" />
+<meta itemprop="dateModified" content="2019-12-26T12:09:50&#43;08:00" />
+<meta itemprop="wordCount" content="1518">
+
+
+
+<meta itemprop="keywords" content="ELKB," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="ELKB_2_部署"/>
+<meta name="twitter:description" content="环境要求 注明 ES代表：elasticsearch Centos7 java 1.8 nginx 软件包及版本 | IP | hostname | 软件 | 内存要求 | | &mdash; | &mdash; | &mdash; | &mdash; | | 172.16.249.101 | elk-1 | filebeat、"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Joken Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">首页</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">归档</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">分类</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">关于我</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Joken Blog</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">首页</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">归档</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">分类</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">标签</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">关于我</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">ELKB_2_部署</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-12-26 12:09 </span>
+        <div class="post-category">
+            <a href="/categories/elkb/"> ELKB </a>
+            </div>
+          <span class="more-meta"> 约 1518 字 </span>
+          <span class="more-meta"> 预计阅读 4 分钟 </span>
+        <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#heading">环境要求</a></li>
+    <li><a href="#elasticsearch">elasticsearch安装</a>
+      <ul>
+        <li><a href="#heading-1">初始化</a></li>
+        <li><a href="#update">服务器时间update</a></li>
+        <li><a href="#heading-5">软件包解压</a></li>
+        <li><a href="#es-">es 启动</a></li>
+        <li><a href="#heading-6">报错修复</a></li>
+        <li><a href="#with-the-same-id-but-is-a-different-node-instance">报错with the same id but is a different node instance</a></li>
+        <li><a href="#heading-7">检查集群健康状态</a></li>
+      </ul>
+    </li>
+    <li><a href="#filebeat-">filebeat 安装使用</a>
+      <ul>
+        <li></li>
+        <li><a href="#kibana-">kibana 安装</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="heading">环境要求</h2>
+<blockquote>
+<p>注明 ES代表：elasticsearch</p>
+</blockquote>
+<ul>
+<li>Centos7</li>
+<li>java 1.8</li>
+<li>nginx</li>
+</ul>
+<p>软件包及版本</p>
+<p><img src="/images/elkb/elkb-10.jpg" alt="">
+| IP | hostname | 软件 | 内存要求 |
+| &mdash; | &mdash; | &mdash; | &mdash; |
+| 172.16.249.101 | elk-1 | filebeat、ES、kibana、nginx、Logstash | 2G及以上 |
+| 172.16.249.102 | elk-2 | filebeat、ES | 2G及以上 |
+|  |  |  |  |</p>
+<h2 id="elasticsearch">elasticsearch安装</h2>
+<h3 id="heading-1">初始化</h3>
+<blockquote>
+<p>每台服务器都需要操作</p>
+</blockquote>
+<h4 id="hostname-">设置hostname 解析</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">## 修改 /etc/hosts 增加如下内容
+
+172.16.249.101 elk-1
+172.16.249.102 elk-2
+
+</code></pre></td></tr></table>
+</div>
+</div><h4 id="java-">java 安装</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback"># 安装 java 1.8
+
+yum install -y epel-release
+yum install -y java-1.8.0-openjdk.x86_64
+
+</code></pre></td></tr></table>
+</div>
+</div><h4 id="selinux">关闭Selinux</h4>
+<p><code>/usr/bin/sed -i '1,$s/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config</code></p>
+<p><strong>重启服务器</strong></p>
+<h4 id="-">关闭 防护墙</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">    # 关闭
+    systemctl stop firewalld
+    # 开启启动关闭
+    systemctl disable firewalld
+
+</code></pre></td></tr></table>
+</div>
+</div><h4 id="heading-2">创建用户和组</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback"># create user elk
+
+groupadd elk
+useradd elk -g elk
+
+</code></pre></td></tr></table>
+</div>
+</div><h4 id="heading-3">创建数据及日志文件并授权</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">
+mkdir  -pv  /data/elk/{data,logs}
+chown -R elk:elk /data/elk/
+
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="update">服务器时间update</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">更新两台服务器时间保持一致
+yum install -y ntp
+ntp.tuna.tsinghua.edu.cn
+
+</code></pre></td></tr></table>
+</div>
+</div><h4 id="heading-4">初始化脚本</h4>
+<blockquote>
+<p>可以直接使用脚本进行安装</p>
+</blockquote>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">
+<span class="c1">#!/usr/bin/env bash</span>
+
+<span class="c1"># author: liuwenqi</span>
+
+<span class="c1"># 初始化</span>
+
+<span class="c1"># 关闭 selinux</span>
+
+<span class="nv">Selinux_status</span><span class="o">=</span><span class="sb">`</span>/usr/sbin/sestatus <span class="p">|</span> grep <span class="s1">&#39;SELinux\ status&#39;</span> <span class="p">|</span> awk <span class="s1">&#39;{print $3}&#39;</span><span class="sb">`</span>
+
+<span class="k">function</span> if_selinux<span class="o">(</span><span class="o">)</span> <span class="o">{</span>
+  <span class="k">if</span> <span class="o">[</span> <span class="s2">&#34;</span><span class="nv">$Selinux_status</span><span class="s2">&#34;</span> <span class="o">=</span><span class="o">=</span> <span class="s2">&#34;enabled&#34;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+     /usr/bin/sed -i <span class="s1">&#39;1,$s/SELINUX=enforcing/SELINUX=disabled/g&#39;</span>  /etc/selinux/config
+  <span class="k">else</span>
+    <span class="nb">echo</span> <span class="s2">&#34;Selinux 已经关闭&#34;</span>
+  <span class="k">fi</span>
+<span class="o">}</span>
+if_selinux
+
+<span class="c1"># 关闭防火墙</span>
+<span class="k">function</span> Stop_firewalld<span class="o">(</span><span class="o">)</span> <span class="o">{</span>
+    <span class="c1"># 关闭</span>
+    systemctl stop firewalld
+    <span class="c1"># 开启启动关闭</span>
+    systemctl disable firewalld
+<span class="o">}</span>
+
+Stop_firewalld
+
+<span class="c1"># 安装 java 1.8</span>
+
+yum install -y epel-release
+yum install -y java-1.8.0-openjdk.x86_64
+<span class="c1"># create user elk</span>
+
+groupadd elk
+useradd elk -g elk
+
+<span class="c1"># 创建数据及日志文件并授权</span>
+
+mkdir  -pv  /data/elk/<span class="o">{</span>data,logs<span class="o">}</span>
+chown -R elk:elk /data/elk/
+
+<span class="c1"># 判断</span>
+<span class="k">if</span> <span class="o">[</span> <span class="nv">$?</span> !<span class="o">=</span> <span class="m">0</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+    <span class="nb">echo</span> <span class="s2">&#34; 上述命令执行失败！ &#34;</span>
+	<span class="nb">exit</span> <span class="m">1</span>
+<span class="k">else</span>
+	reboot
+<span class="k">fi</span>
+
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="heading-5">软件包解压</h3>
+<ul>
+<li>
+<p>上传软件包</p>
+<p>通过scp 或者ftp 方式上传到 /opt下</p>
+</li>
+<li>
+<p>解压软件包</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">cd /opt/
+# 解压到当前目录
+tar -xf elasticsearch-7.2.0-linux-x86_64.tar.gz -C .
+
+</code></pre></td></tr></table>
+</div>
+</div></li>
+<li>
+<p>授权</p>
+</li>
+</ul>
+<p><code>chown -R elk.elk 软件包名</code></p>
+<ul>
+<li>
+<p>elk-1 配置文件</p>
+<p><code>/opt/elasticsearch-7.2.0/config/elasticsearch.yml</code></p>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback"># 集群名
+cluster.name: elk
+# 节点名
+node.name: node-1
+# 存储数据
+path.data: /data/elk/data
+# 存放日志
+path.logs: /data/elk/logs
+# 锁内存，尽量不使用交换内存
+bootstrap.memory_lock: false
+# 网络地址
+network.host: 0.0.0.0
+http.port: 9200
+# 发现集群hosts
+discovery.seed_hosts: [&#34;elk-1&#34;, &#34;elk-2&#34;]
+# 设置集群master节点
+cluster.initial_master_nodes: [&#34;node-1&#34;]
+
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>
+<p>elk-2 配置文件</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback"># 集群名
+cluster.name: elk
+# 节点名
+node.name: node-2
+# 存储数据
+path.data: /data/elk/data
+# 存放日志
+path.logs: /data/elk/logs
+# 锁内存，尽量不使用交换内存
+bootstrap.memory_lock: false
+# 网络地址
+network.host: 0.0.0.0
+http.port: 9200
+# 发现集群hosts
+discovery.seed_hosts: [&#34;elk-1&#34;, &#34;elk-2&#34;]
+# 设置集群master节点
+cluster.initial_master_nodes: [&#34;node-1&#34;]
+
+</code></pre></td></tr></table>
+</div>
+</div></li>
+<li>
+<p>修改 /etc/security/limits.conf</p>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">  * soft nofile 65536
+  * hard nofile 131072
+  * soft nproc 2048
+  * hard nproc 4096
+
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>
+<p>修改 /etc/sysctl.conf</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">echo &#34;vm.max_map_count=262144&#34; &gt; /etc/sysctl.conf
+sysctl -p
+
+</code></pre></td></tr></table>
+</div>
+</div></li>
+</ul>
+<h3 id="es-">es 启动</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">nohup runuser -l elk -c &#39;/bin/bash /opt/elasticsearch-7.2.0/bin/elasticsearch&#39; &amp;
+
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="heading-6">报错修复</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">ERROR: [4] bootstrap checks failed
+[1]: max file descriptors [4096] for elasticsearch process is too low, increase to at least [65535]
+[2]: memory locking requested for elasticsearch process but memory is not locked
+[3]: max number of threads [3818] for user [elk] is too low, increase to at least [4096]
+[4]: max virtual memory areas vm.max_map_count [65530] is too low, increase to at least [262144]
+
+## 根据相应的报错信息进行修改
+
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="with-the-same-id-but-is-a-different-node-instance">报错with the same id but is a different node instance</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">复制elsticsearch将其文件夹下的data文件夹一并复制了，/data/elk/data文件夹下已经产生了data历史数据，删除即可
+
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="heading-7">检查集群健康状态</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">curl  -XGET &#39;localhost:9200/_cluster/health?pretty&#39;
+
+</code></pre></td></tr></table>
+</div>
+</div><p><img src="/image/elkb/elkb-43.png" alt=""></p>
+<h2 id="filebeat-">filebeat 安装使用</h2>
+<h4 id="heading-8">下载安装</h4>
+<h5 id="rpm">使用RPM安装</h5>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">`curl -L -O https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-7.2.0-x86_64.rpm`
+`sudo rpm -vi filebeat-7.2.0-x86_64.rpm`
+
+</code></pre></td></tr></table>
+</div>
+</div><h4 id="-etcfilebeatfilebeatyml">配置文件（修改 /etc/filebeat/filebeat.yml）</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">  ## 抓取日志文件操作
+  filebeat.inputs:
+  - type: log
+    enabled: true
+    paths:
+      - /var/log/*.log  # 抓取文件路径
+
+  ## 多文件添加可以在paths:后面增加
+    paths:
+      - /var/log/*.log
+      - /var/log/nginx/access.log
+
+</code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">output.elasticsearch:
+  hosts: [&#34;elk-1:9200&#34;]   ## 输出到es
+  # 多台es，更改为host: [&#34;IP-1:9200&#34;,&#34;IP-2:9200&#34;]
+
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>测试配置文件</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">filebeat test config -e
+
+</code></pre></td></tr></table>
+</div>
+</div><h4 id="filebeat--1">filebeat 服务日志格式配置</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback"># vim 修改 /etc/filebeat/filebeat.yml
+# 在 #logging.level: debug 后面添加
+logging.level: info # 日志级别 
+logging.to_files: true
+logging.files:
+  path: /var/log/filebeat
+  name: filebeat
+  keepfiles: 7
+  permissions: 0644
+
+</code></pre></td></tr></table>
+</div>
+</div><h4 id="heading-9">官方整理了多数软件常见模板</h4>
+<p><img src="/images/elkb/elkb-44.png" alt="">
+<strong>特点:方便省事</strong></p>
+<h5 id="heading-10">使用</h5>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">以nginx日志为例子
+cd /etc/filebeat/filebeat/
+修改 nginx.yml.disabled
+
+- module: nginx
+  # Access logs
+  access:
+    enabled: true
+
+    # Set custom paths for the log files. If left empty,
+    # Filebeat will choose the paths depending on your OS.
+    var.paths:
+    ##增加下面这行
+      - /var/log/nginx/access.log
+    # Convert the timestamp to UTC. Requires Elasticsearch &gt;= 6.1.
+    #var.convert_timezone: true
+
+  # Error logs
+  error:
+    enabled: true
+
+mv nginx.yml.disabled nginx.yml
+
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="kibana-">kibana 安装</h3>
+<ul>
+<li>
+<p>解压 kibana 安装包</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">cd /opt/
+tar -xf kibana-7.2.0-linux-x86_64.tar.gz -C .
+
+</code></pre></td></tr></table>
+</div>
+</div></li>
+<li>
+<p>配置文件修改</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">cd /opt/kibana-7.2.0-linux-x86_64
+vim ./config/kibana.yml
+
+server.port: 5601  # port
+server.host: 0.0.0.0 # 访问限制
+elasticsearch.hosts: [&#34;http://localhost:9200&#34;] ## elasticsearch 访问地址
+i18n.locale: &#34;zh-CN&#34; # 中文
+
+</code></pre></td></tr></table>
+</div>
+</div></li>
+<li>
+<p>启动命令</p>
+</li>
+</ul>
+<p><img src="/images/elkb/elkb-11.jpg" alt="">
+<code>、./bin/kibana --allow-root</code></p>
+<ul>
+<li>停止命名</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback"># 由于kibana 已node方式启动
+kill -9 `ps -ef | grep node| grep -v grep | awk &#39;{print $2}&#39;`
+
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>放入后台使用</li>
+</ul>
+<p><code>nohup ./bin/kibana --allow-root &amp;</code></p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Joken</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-12-26 12:09
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/elkb/">ELKB</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/elkb/elkb_3_logstash/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">ELKB_3_logstash</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/elkb/elkb_1_%E9%9B%86%E4%B8%AD%E5%BC%8F%E6%97%A5%E5%BF%97%E7%AE%A1%E7%90%86/">
+            <span class="next-text nav-default">ELKB_1_集中式日志管理</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:your@email.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://localhost:1313" class="iconfont icon-google" title="google"></a>
+      <a href="https://github.com/jiaopanxin/jiaopanxin.github.io" class="iconfont icon-github" title="github"></a>
+      <a href="http://localhost:1313" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="http://localhost:1313" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="http://localhost:1313" class="iconfont icon-douban" title="douban"></a>
+      <a href="http://localhost:1313" class="iconfont icon-pocket" title="pocket"></a>
+      <a href="http://localhost:1313" class="iconfont icon-tumblr" title="tumblr"></a>
+      <a href="http://localhost:1313" class="iconfont icon-instagram" title="instagram"></a>
+      <a href="http://localhost:1313" class="iconfont icon-gitlab" title="gitlab"></a>
+      <a href="http://localhost:1313" class="iconfont icon-bilibili" title="bilibili"></a>
+  <a href="https://jiaopanxin.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  <div class="busuanzi-footer">
+    <span id="busuanzi_container_site_pv"> 本站总访问量 <span id="busuanzi_value_site_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次 </span>
+      <span class="division">|</span>
+    <span id="busuanzi_container_site_uv"> 本站总访客数 <span id="busuanzi_value_site_uv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 人 </span>
+  </div>
+
+  <span class="copyright-year">
+    &copy; 
+    2019 - 
+    2020
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Joken</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  <script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  <script type="text/javascript" src="/lib/fancybox/jquery.fancybox-3.1.20.min.js"></script>
+    <script type="text/javascript" src="/lib/timeago/timeago-3.0.2.min.js"></script>
+    <script type="text/javascript" src="/lib/timeago/timeago.locales-3.0.2.min.js"></script>
+  <script><!-- NOTE: timeago.js uses the language code format like "zh_CN" (underscore and case sensitive) -->
+    var languageCode = "zh-CN".replace(/-/g, '_').replace(/_(.*)/, function ($0, $1) {return $0.replace($1, $1.toUpperCase());});
+    timeago().render(document.querySelectorAll('.timeago'), languageCode);
+    timeago.cancel();  
+  </script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

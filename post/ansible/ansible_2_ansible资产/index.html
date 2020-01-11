@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Ansible_2_ansible资产 - Joken Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Joken" /><meta name="description" content="第 2 章 Ansible 资产 在快速入门的场景中，我们一共管理了两台服务器。但是在实际场景中，我们要管理的服务器往往要多得多。难道依然要在Ansible 的 -i 参" /><meta name="keywords" content="Hugo, theme, even" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.62.0 with theme even" />
+
+
+<link rel="canonical" href="https://jiaopanxin.github.io/post/ansible/ansible_2_ansible%E8%B5%84%E4%BA%A7/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link href="/lib/fancybox/jquery.fancybox-3.1.20.min.css" rel="stylesheet">
+
+
+<meta property="og:title" content="Ansible_2_ansible资产" />
+<meta property="og:description" content="第 2 章 Ansible 资产 在快速入门的场景中，我们一共管理了两台服务器。但是在实际场景中，我们要管理的服务器往往要多得多。难道依然要在Ansible 的 -i 参" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://jiaopanxin.github.io/post/ansible/ansible_2_ansible%E8%B5%84%E4%BA%A7/" />
+<meta property="article:published_time" content="2019-12-25T20:03:21+08:00" />
+<meta property="article:modified_time" content="2019-12-25T20:03:21+08:00" />
+<meta itemprop="name" content="Ansible_2_ansible资产">
+<meta itemprop="description" content="第 2 章 Ansible 资产 在快速入门的场景中，我们一共管理了两台服务器。但是在实际场景中，我们要管理的服务器往往要多得多。难道依然要在Ansible 的 -i 参">
+<meta itemprop="datePublished" content="2019-12-25T20:03:21&#43;08:00" />
+<meta itemprop="dateModified" content="2019-12-25T20:03:21&#43;08:00" />
+<meta itemprop="wordCount" content="1239">
+
+
+
+<meta itemprop="keywords" content="ansible," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Ansible_2_ansible资产"/>
+<meta name="twitter:description" content="第 2 章 Ansible 资产 在快速入门的场景中，我们一共管理了两台服务器。但是在实际场景中，我们要管理的服务器往往要多得多。难道依然要在Ansible 的 -i 参"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Joken Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">首页</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">归档</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">分类</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">关于我</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Joken Blog</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">首页</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">归档</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">分类</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">标签</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">关于我</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Ansible_2_ansible资产</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-12-25 20:03 </span>
+        <div class="post-category">
+            <a href="/categories/ansible/"> ansible </a>
+            </div>
+          <span class="more-meta"> 约 1239 字 </span>
+          <span class="more-meta"> 预计阅读 3 分钟 </span>
+        <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h4 id="-2--ansible-">第 2 章 Ansible 资产</h4>
+<blockquote>
+<p>在快速入门的场景中，我们一共管理了两台服务器。但是在实际场景中，我们要管理的服务器往往要多得多。难道依然要在Ansible 的 -i 参数后面一个个追加IP指定吗? 这显然不合乎常理。因此这一节我们主要去介绍一下Ansible的资产。Ansible 的资产分为静态资产和动态资产，下面我们将围绕这两部分分别介绍。</p>
+</blockquote>
+<h5 id="11-">1.1 静态资产</h5>
+<blockquote>
+<p>顾名思义它本身是一个文本文件，一个格式类似INI的文件。默认情况下，Ansible的资产文件位于 /ect/ansible/hosts。我们这里给出一个自定义的静态资产实例，然后再具体解释其含义。</p>
+</blockquote>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback"># cat inventory
+1.1.1.1
+2.2.2.2
+3.3.3.[1:15]
+test01.qfedu.com
+test03.qfedu.com
+test[05:09].qfedu.com
+
+[web-servers]
+192.168.1.2
+192.168.1.3
+192.168.1.5
+
+[db-servers]
+192.168.2.2
+192.168.2.3
+192.168.1.5
+
+[all-servers]
+[all-servers:children]
+db-servers
+web-servers
+
+</code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">1、Ansible 的资产文件中，可以以IP地址的形式或者主机名的形式存在
+2、Ansible 的资产若连续，可以使用[stat:end] 的形式去表达
+3、可以将服务器按照业务场景定义成组，比如db-servers 和 web-servers
+4、组和组之间可以存在继承关系，比如db-servers 和 web-servers 同时继承all-servers 组
+
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>如何使用自定义资产</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">// 通过 -i 参数指定自定义资产的位置即可(可以是全路径，也可以是相对路径)。
+# ansible all -i inventory.ini ... // 伪指令，不可执行
+
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>如何验证自定义资产</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">// 假如我们刚刚定义的资产为 inventory.ini
+// 列举出所有资产
+# ansible all -i inventory.ini  --list-hosts
+
+// 列举出选定资产，比如这里列举出web-servers
+// 注意这里使用的了资产选择器(pattern)，我们将会在下面对他进行详细的阐述
+# ansible web-servers -i inventory.ini --list-hosts
+
+// 以上指令，若能列举出我们在资产中定义的服务器，那么你的自定义资产也就生效了。
+
+</code></pre></td></tr></table>
+</div>
+</div><h5 id="12-">1.2 动态资产</h5>
+<p>动态资产, -i 参数后面接的是一个可运行的脚本。脚本的结果为一个 Ansible 可理解的 JSON 格式字符串。</p>
+<p>为什么要存在动态资产呢? 往往我们在使用 Ansible 管理服务器前，公司中有可能已经将服务器信息存储在了特定位置,比如 CMDB, 数据库等系统。
+此时若我们再使用静态资产去管理服务器，势必会造成资产管理入口不统一的问题。</p>
+<p>因此我们只能抛弃原先的静态资产，通过脚本从已存在的系统中获取要管理的节点，并按照特定的形式传给 Ansible。这样既解决了公司资产统一入口， 也解决了Ansible 的服务器管理来源。</p>
+<p><strong>动态资产实例</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">{
+  &#34;_meta&#34;: {
+    &#34;hostvars&#34;: {
+      &#34;192.168.100.10&#34;: {
+        &#34;host_var&#34;: &#34;hoge&#34;
+      },
+      &#34;192.168.100.20&#34;: {
+        &#34;host_var&#34;: &#34;fuga&#34;
+      }
+    }
+  },
+  &#34;sample-servers&#34;: {
+    &#34;hosts&#34;: [
+      &#34;192.168.100.10&#34;,
+      &#34;192.168.100.20&#34;
+    ],
+    &#34;vars&#34;: {
+      &#34;group_var&#34;: &#34;hogefuga&#34;
+    }
+  }
+}
+
+</code></pre></td></tr></table>
+</div>
+</div><h5 id="13-">1.3 资产选择器</h5>
+<blockquote>
+<p>有时操作者希望只对资产中的一部分服务器进行操作，而不是资产中列举的所有服务器。此时我们该如何选择呢？
+这里我们将学习 Ansible 的资产选择器 PATTERN，通过资产选择器，我们可以灵活的选择想要操作的服务器。</p>
+</blockquote>
+<p><strong>格式</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback"># ansible PATTERN -i inventory -m module -a argument  // 伪代码，勿执行
+
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>选择一台或者几台服务器</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback"># ansible 1.1.1.1 -i inventory.ini --list-hosts
+# ansible test01.qfedu.com -i inventory.ini --list-hosts
+# ansible 1.1.1.1,2.2.2.2 -i inventory.ini --list-hosts
+
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>选择所有服务器</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback"># ansible &#39;*&#39; -i  inventory.ini --list-hosts
+# ansible all -i inventory.ini --list-hosts
+
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>选择一组服务器</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback"># ansible web-servers -i inventory.ini --list-hosts
+
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>使用 * 匹配</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback"># ansible 3.3.3.* -i inventory.ini --list-hosts
+
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>使用逻辑匹配</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">// web-servers 和 db-servers 的并集
+# ansible &#39;web-servers:db-servers&#39; -i inventory.ini --list-hosts
+// web-servers 和 db-servers 的交集
+# ansible &#39;web-servers:&amp;db-servers&#39; -i inventory.ini --list-hosts
+// 在 web-servers 中， 但不在 db-servers 的服务器
+# ansible &#39;web-servers:!db-servers&#39; -i inventory.ini --list-hosts
+
+</code></pre></td></tr></table>
+</div>
+</div>
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Joken</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-12-25 20:03
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/ansible/">ansible</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/ansible/ansible_3_ad_hoc%E4%BB%A5%E5%8F%8A%E6%A8%A1%E5%9D%97/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Ansible_3_ad_hoc以及模块</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/ansible/ansible_1_ansible%E4%BB%8B%E7%BB%8D%E5%8F%8A%E5%AE%89%E8%A3%85/">
+            <span class="next-text nav-default">Ansible_1_ansible介绍及安装</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:your@email.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://localhost:1313" class="iconfont icon-google" title="google"></a>
+      <a href="https://github.com/jiaopanxin/jiaopanxin.github.io" class="iconfont icon-github" title="github"></a>
+      <a href="http://localhost:1313" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="http://localhost:1313" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="http://localhost:1313" class="iconfont icon-douban" title="douban"></a>
+      <a href="http://localhost:1313" class="iconfont icon-pocket" title="pocket"></a>
+      <a href="http://localhost:1313" class="iconfont icon-tumblr" title="tumblr"></a>
+      <a href="http://localhost:1313" class="iconfont icon-instagram" title="instagram"></a>
+      <a href="http://localhost:1313" class="iconfont icon-gitlab" title="gitlab"></a>
+      <a href="http://localhost:1313" class="iconfont icon-bilibili" title="bilibili"></a>
+  <a href="https://jiaopanxin.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  <div class="busuanzi-footer">
+    <span id="busuanzi_container_site_pv"> 本站总访问量 <span id="busuanzi_value_site_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次 </span>
+      <span class="division">|</span>
+    <span id="busuanzi_container_site_uv"> 本站总访客数 <span id="busuanzi_value_site_uv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 人 </span>
+  </div>
+
+  <span class="copyright-year">
+    &copy; 
+    2019 - 
+    2020
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Joken</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  <script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  <script type="text/javascript" src="/lib/fancybox/jquery.fancybox-3.1.20.min.js"></script>
+    <script type="text/javascript" src="/lib/timeago/timeago-3.0.2.min.js"></script>
+    <script type="text/javascript" src="/lib/timeago/timeago.locales-3.0.2.min.js"></script>
+  <script><!-- NOTE: timeago.js uses the language code format like "zh_CN" (underscore and case sensitive) -->
+    var languageCode = "zh-CN".replace(/-/g, '_').replace(/_(.*)/, function ($0, $1) {return $0.replace($1, $1.toUpperCase());});
+    timeago().render(document.querySelectorAll('.timeago'), languageCode);
+    timeago.cancel();  
+  </script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

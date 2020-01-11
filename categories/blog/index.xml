@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>blog on Joken Blog</title>
+    <link>https://jiaopanxin.github.io/categories/blog/</link>
+    <description>Recent content in blog on Joken Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Sat, 11 Jan 2020 18:28:13 +0800</lastBuildDate>
+    
+	<atom:link href="https://jiaopanxin.github.io/categories/blog/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>思维导图</title>
+      <link>https://jiaopanxin.github.io/post/%E5%8D%9A%E5%AE%A2/%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE/</link>
+      <pubDate>Sat, 11 Jan 2020 18:28:13 +0800</pubDate>
+      
+      <guid>https://jiaopanxin.github.io/post/%E5%8D%9A%E5%AE%A2/%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE/</guid>
+      <description>[](/static/blog/1.png)</description>
+    </item>
+    
+  </channel>
+</rss>
